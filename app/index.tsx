@@ -1,25 +1,24 @@
-import { Text, View, TouchableOpacity, SafeAreaView, ScrollView } from "react-native";
+import { Text, View, TouchableOpacity, ScrollView, StatusBar } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
-import ProIcon from "@/components/nav/proIcon";
+import NavBar from "@/components/navbar";
+import { SafeAreaView } from "react-native-safe-area-context"
+import FeatureTool from "@/components/featurIcon";
+import BackgroundEditTools from "@/components/backgroundEditTools";
+import ImageEnhanceTools from "@/components/imageEnhanceTools";
+import { Link } from "expo-router";
 export default function Index() {
 
     return (
-        <View style={{
-            backgroundColor: "white"
-        }}>
-            <ScrollView>
-                <SafeAreaView style={{
-                    // backgroundColor: "black",
-                    height: 900,
-                    alignItems: "center",
-                    justifyContent: "center"
-                }}>
-                    <Text style={{
-                        color: "black",
-                    }}>Hello world</Text>
-                    <ProIcon />
-                </SafeAreaView>
-            </ScrollView>
-        </View>
+        <View className="bg-background min-h-screen">
+            <ScrollView className="px-[10px]">
+
+
+                <Link href={"/(screens)"}>
+                    <Text className="text-5xl text-text">Hello World</Text>
+                </Link>
+
+
+            </ScrollView >
+        </View >
     );
 }

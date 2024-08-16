@@ -3,8 +3,8 @@ import React from 'react'
 
 const ProIcon = () => {
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>Try Pro</Text>
+        <View className='w-[70px] h-[30px] bg-error items-center justify-center rounded-full'>
+            <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-sm text-text'>Tro Pro</Text>
         </View>
     )
 }
@@ -19,8 +19,7 @@ const styles = StyleSheet.create({
         borderRadius: 200
     },
     text: {
-        color: "white",
-        fontWeight: 600
+        // color: "white",
 
     }
 })

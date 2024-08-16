@@ -4,7 +4,7 @@ import React from 'react'
 const Card = () => {
     return (
         <View>
-            <Text>Card</Text>
+            <Text className='text-green-600'>Card</Text>
         </View>
     )
 }
