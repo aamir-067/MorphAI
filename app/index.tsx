@@ -13,7 +13,7 @@ export default function Index() {
             <ScrollView className="px-[10px]">
 
 
-                <Link href={"/(screens)"}>
+                <Link href={"/(screens)"} replace>
                     <Text className="text-5xl text-text">Hello World</Text>
                 </Link>
 
@@ -22,3 +22,7 @@ export default function Index() {
         </View >
     );
 }
+
+
+
+

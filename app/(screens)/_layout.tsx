@@ -15,7 +15,7 @@ export default function RootLayout() {
                 <NavBar />
                 <Stack>
                     <Stack.Screen name="index" options={{ headerShown: false }} />
-                    <Stack.Screen name="effect-screen" options={{ headerShown: false }} />
+                    <Stack.Screen name="effect-screen/index" options={{ headerShown: false }} />
                 </Stack>
             </View>
         </>

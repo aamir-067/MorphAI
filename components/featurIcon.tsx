@@ -6,7 +6,7 @@ import { Link } from 'expo-router';
 const FeatureTool = ({ title }: { title: string }) => {
 
     return (
-        <Link href={"/effect-screen"} replace>
+        <Link href={"/effect-screen"}>
             <View className='gap-y-1 mr-4 w-[80px] items-center'>
                 <View className='w-full rounded-[15px] h-[75px] bg-outline justify-center items-center'>
                     <Svg width="38" height="38" viewBox="0 0 33 33" fill="none">
