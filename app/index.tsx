@@ -4,7 +4,7 @@ import { Link } from "expo-router";
 export default function Index() {
 
     return (
-        <View className="bg-background min-h-screen">
+        <View className="bg-background h-full">
             <ScrollView className="px-[10px]">
 
                 <View className="w-full p-2 mt-4 items-center justify-center aspect-square">

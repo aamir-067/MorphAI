@@ -5,19 +5,31 @@ import { SafeAreaView } from "react-native-safe-area-context"
 import FeatureTool from "@/components/featurIcon";
 import BackgroundEditTools from "@/components/backgroundEditTools";
 import ImageEnhanceTools from "@/components/imageEnhanceTools";
+import { Link } from "expo-router";
 export default function Index() {
 
     return (
-        <View className="bg-background  min-h-screen">
+        <View className="bg-background  h-full">
             <ScrollView className="px-[10px]">
                 <Text style={{ fontFamily: "Outfit-Medium" }} className="text-text text-3xl my-5">Featured Tools</Text>
 
                 {/* featured tool */}
-                <ScrollView horizontal={true} className="" showsHorizontalScrollIndicator={false}>
-                    <FeatureTool title={"Background Remove"} />
-                    <FeatureTool title={"Magic Eraser"} />
-                    <FeatureTool title={"Background Replace"} />
-                    <FeatureTool title={"Upscale"} />
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                    <Link className="mr-4" href={"/effects/backgroundRemove"}>
+                        <FeatureTool title={"Background Remove"} backgroundColor={"#65558F"} />
+                    </Link>
+
+
+                    <Link className="mr-4" href={"/effects/backgroundRemove"}>
+                        <FeatureTool title={"Magic Eraser"} backgroundColor={"#326AFD"} />
+                    </Link>
+                    <Link className="mr-4" href={"/effects/backgroundReplace"}>
+                        <FeatureTool title={"Background Replace"} backgroundColor={"#B3261E"} />
+                    </Link>
+
+                    <Link className="mr-4" href={"/effects/backgroundRemove"}>
+                        <FeatureTool title={"Upscale"} backgroundColor={"#303030"} />
+                    </Link>
                 </ScrollView>
 
                 {/* background Edit Tools */}
@@ -27,12 +39,8 @@ export default function Index() {
 
                 {/* Image Enhance Tools */}
                 <ImageEnhanceTools />
-                {/* Image Enhance Tools */}
-                <ImageEnhanceTools />
-                {/* Image Enhance Tools */}
-                <ImageEnhanceTools />
-                {/* Image Enhance Tools */}
-                <ImageEnhanceTools />
+                {/* AI Powered Tools */}
+                {/* <ImageEnhanceTools /> */}
 
 
 
