@@ -1,12 +1,10 @@
 import { Stack } from "expo-router";
-import { View, StatusBar } from "react-native"
+import { StatusBar } from "react-native"
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from "react";
-import NavBar from "@/components/navbar";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function RootLayout() {
-
     const [loaded, error] = useFonts({
         "Outfit-Bold": require("@/assets/fonts/Outfit-Bold.ttf"),
         "Outfit-Light": require("@/assets/fonts/Outfit-Light.ttf"),
@@ -33,14 +31,14 @@ export default function RootLayout() {
 
 
     return (
-        <>
-            <SafeAreaView className="bg-background min-h-screen">
-                <StatusBar animated barStyle={"light-content"} />
-                <Stack>
-                    <Stack.Screen name="index" options={{ headerShown: false }} />
-                    <Stack.Screen name="(screens)" options={{ headerShown: false }} />
-                </Stack>
-            </SafeAreaView>
-        </>
+
+        <SafeAreaView className="bg-background h-full">
+            <StatusBar animated={true} barStyle={"light-content"} />
+            <Stack screenOptions={{ navigationBarHidden: true }}>
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="(screens)" options={{ headerShown: false }} />
+            </Stack>
+        </SafeAreaView>
     );
+
 }

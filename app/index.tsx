@@ -14,8 +14,9 @@ export default function Index() {
 
 
                 <Link href={"/(screens)"} replace>
-                    <Text className="text-5xl text-text">Hello World</Text>
+                    <Text className="text-5xl text-text">Get Started</Text>
                 </Link>
+
 
 
             </ScrollView >

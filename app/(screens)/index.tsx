@@ -27,6 +27,12 @@ export default function Index() {
 
                 {/* Image Enhance Tools */}
                 <ImageEnhanceTools />
+                {/* Image Enhance Tools */}
+                <ImageEnhanceTools />
+                {/* Image Enhance Tools */}
+                <ImageEnhanceTools />
+                {/* Image Enhance Tools */}
+                <ImageEnhanceTools />
 
 
 
