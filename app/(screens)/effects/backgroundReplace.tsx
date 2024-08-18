@@ -1,31 +1,19 @@
-
 import { Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
-import { DocumentPickerAsset, DocumentPickerResult, getDocumentAsync } from "expo-document-picker";
 import { Image } from 'react-native';
+import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
+import { ImagePickerAsset } from 'expo-image-picker';
+
+
 const backgroundReplace = () => {
-    const [img, setImg] = useState<DocumentPickerAsset | undefined>(undefined);
+    const [img, setImg] = useState<ImagePickerAsset | undefined>(undefined);
 
     const getPicture = async () => {
-        const res: DocumentPickerResult = await getDocumentAsync({
-            type: "image/*",
-            copyToCacheDirectory: false
-        });
-        if (res?.canceled == false) {
-            const img: DocumentPickerAsset = res?.assets[0];
-            setImg(img);
-        }
+        const asset = await getAssetFromGallery({ fileType: "image" });
+        setImg(asset)
     }
-
-
-    useEffect(() => {
-        console.log(img);
-
-    }, [img]);
-
-
 
 
     return (

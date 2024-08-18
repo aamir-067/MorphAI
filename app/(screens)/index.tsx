@@ -21,14 +21,14 @@ export default function Index() {
 
 
                     <Link className="mr-4" href={"/effects/backgroundRemove"}>
-                        <FeatureTool title={"Magic Eraser"} backgroundColor={"#326AFD"} />
+                        <FeatureTool title={"Magic Eraser"} backgroundColor={"#EFB8C8"} />
                     </Link>
                     <Link className="mr-4" href={"/effects/backgroundReplace"}>
-                        <FeatureTool title={"Background Replace"} backgroundColor={"#B3261E"} />
+                        <FeatureTool title={"Background Replace"} backgroundColor={"#E8B931"} />
                     </Link>
 
                     <Link className="mr-4" href={"/effects/backgroundRemove"}>
-                        <FeatureTool title={"Upscale"} backgroundColor={"#303030"} />
+                        <FeatureTool title={"Upscale"} backgroundColor={"#14AE5C"} />
                     </Link>
                 </ScrollView>
 

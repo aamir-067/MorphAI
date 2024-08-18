@@ -1,29 +1,69 @@
 
-import { Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
-import { DocumentPickerAsset, DocumentPickerResult, getDocumentAsync } from "expo-document-picker";
 import { Image } from 'react-native';
+import { downloadImage } from '@/utils/downloadFile';
+import { uploadAsset } from '@/cloudinary/imageUpload';
+import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
+import { ImagePickerAsset } from 'expo-image-picker';
+import { removeImageBackground } from '@/cloudinary/effects/image/backgroundRemove';
 const backgroundRemove = () => {
-    const [img, setImg] = useState<DocumentPickerAsset | undefined>(undefined);
+    const [img, setImg] = useState<ImagePickerAsset | undefined>(undefined);
+    const [transformedImage, setTransformedImage] = useState<string>("");
 
     const getPicture = async () => {
-        const res: DocumentPickerResult = await getDocumentAsync({
-            type: "image/*",
-            copyToCacheDirectory: false
-        });
-        if (res?.canceled == false) {
-            const img: DocumentPickerAsset = res?.assets[0];
-            setImg(img);
+        const asset = await getAssetFromGallery({ fileType: "image" });
+        setImg(asset)
+    }
+
+
+    const handleTransformation = async () => {
+
+        // if their is transformed Image then download it.
+        if (transformedImage) {
+            handleDownload();
+            return;
+        }
+        try {
+            // make sure the image is selected.
+            if (img == undefined) {
+                Alert.alert("please select the image first");
+                return;
+            }
+
+            // upload the image to the cloud.
+            const response = await uploadAsset({ fileUri: img.uri });
+
+            if (!response) {
+                Alert.alert("Error while uploading the image");
+                return;
+            }
+
+
+            // remove the background
+            const transformedImageUrl = await removeImageBackground({ publicId: response.public_id });
+
+            typeof transformedImageUrl === "string" && setTransformedImage(transformedImageUrl);
+        } catch (error) {
+            console.log(error);
+            Alert.alert("Error", "Something went wrong while processing");
         }
     }
 
 
-    useEffect(() => {
-        console.log(img);
+    const handleDownload = async () => {
+        if (transformedImage) {
+            await downloadImage({ imageUrl: transformedImage });
+            Alert.alert("Image Downloaded Successful");
+        } else {
+            Alert.alert("please transform the image first");
+        }
 
-    }, [img]);
+
+    }
+
 
 
     return (
@@ -51,16 +91,17 @@ const backgroundRemove = () => {
                             <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>Cancel</Text>
                         </TouchableOpacity>
                     </Link>
-                    <TouchableOpacity activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>Edit</Text>
+                    <TouchableOpacity onPress={() => {
+                        handleTransformation();
+                    }} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
+                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{transformedImage ? "Save" : "Edit"}</Text>
                     </TouchableOpacity>
                 </View>
-
             </ScrollView>
 
 
             {/* Ad here  */}
-            {/* <View className='bg-red-400 h-52 w-full'>
+            {/* <View className='bg-red-400 min-h-20 h-40 w-full'>
             </View> */}
         </View>
     )
