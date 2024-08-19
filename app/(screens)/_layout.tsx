@@ -13,6 +13,8 @@ export default function RootLayout() {
                     <Stack.Screen name="index" options={{ headerShown: false }} />
                     <Stack.Screen name="effects/backgroundReplace" options={{ headerShown: false }} />
                     <Stack.Screen name="effects/backgroundRemove" options={{ headerShown: false }} />
+                    <Stack.Screen name="effects/imageUpscale" options={{ headerShown: false }} />
+                    <Stack.Screen name="effects/magicEraser" options={{ headerShown: false }} />
                 </Stack>
             </View>
         </>

@@ -1,6 +1,6 @@
 import { cld } from "@/cloudinary/cloudinary";
-import { generativeBackgroundReplace } from "@cloudinary/url-gen/actions/effect";
-export const replaceImageBackground = async ({
+import { generativeRemove } from "@cloudinary/url-gen/actions/effect";
+export const magicEraser = async ({
 	publicId,
 	prompt,
 }: {
@@ -10,7 +10,7 @@ export const replaceImageBackground = async ({
 	try {
 		const image = cld
 			.image(publicId)
-			.effect(generativeBackgroundReplace().prompt(prompt));
+			.effect(generativeRemove().prompt(prompt));
 
 		console.log("the url of the image is ==>", image.toURL());
 

@@ -6,6 +6,7 @@ import FeatureTool from "@/components/featurIcon";
 import BackgroundEditTools from "@/components/backgroundEditTools";
 import ImageEnhanceTools from "@/components/imageEnhanceTools";
 import { Link } from "expo-router";
+import PopularAiTools from "@/components/PopularAiTools";
 export default function Index() {
 
     return (
@@ -19,15 +20,14 @@ export default function Index() {
                         <FeatureTool title={"Background Remove"} backgroundColor={"#65558F"} icon={require("@/assets/icons/backgroundRemoveIcon.png")} />
                     </Link>
 
-
-                    <Link className="mr-4" href={"/effects/backgroundRemove"}>
+                    <Link className="mr-4" href={"/effects/magicEraser"}>
                         <FeatureTool title={"Magic Eraser"} backgroundColor={"#EFB8C8"} icon={require("@/assets/icons/magicEraserIcon.png")} />
                     </Link>
                     <Link className="mr-4" href={"/effects/backgroundReplace"}>
                         <FeatureTool title={"Background Replace"} backgroundColor={"#E8B931"} icon={require("@/assets/icons/backgroundReplaceIcon.png")} />
                     </Link>
 
-                    <Link className="mr-4" href={"/effects/backgroundRemove"}>
+                    <Link className="mr-4" href={"/effects/imageUpscale"}>
                         <FeatureTool title={"Upscale"} backgroundColor={"#14AE5C"} icon={require("@/assets/icons/upscaleIcon.png")} />
                     </Link>
                 </ScrollView>
@@ -35,12 +35,12 @@ export default function Index() {
                 {/* background Edit Tools */}
                 <BackgroundEditTools />
 
-
-
                 {/* Image Enhance Tools */}
                 <ImageEnhanceTools />
-                {/* AI Powered Tools */}
-                {/* <ImageEnhanceTools /> */}
+
+
+                {/* Popular AI tools */}
+                <PopularAiTools />
 
 
 

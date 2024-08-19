@@ -1,43 +1,61 @@
-
-import { Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
 import { Image } from 'react-native';
-import { downloadImage } from '@/utils/downloadFile';
-import { uploadAsset } from '@/cloudinary/imageUpload';
 import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
-import { removeImageBackground } from '@/cloudinary/effects/image/backgroundRemove';
+import { downloadImage } from '@/utils/downloadFile';
 import LoadingWithMessage from '@/components/loadingWithMessage';
-const backgroundRemove = () => {
+import { uploadAsset } from '@/cloudinary/imageUpload';
+import { magicEraser } from '@/cloudinary/effects/image/magicEraser';
+
+
+const MagicEraser = () => {
     const [img, setImg] = useState<ImagePickerAsset | undefined>(undefined);
-    const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>(undefined);
+    const [prompt, setPrompt] = useState<string>("");
+    const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>(undefined)
     const [loadingMessage, setLoadingMessage] = useState("");
+
+
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
         setImg(asset)
     }
 
 
+
+
     const handleTransformation = async () => {
 
         // if their is transformed Image then download it.
         if (transformedImageUrl) {
-            handleDownload();
+            setLoadingMessage("Downloading...");
+            await downloadImage({ imageUrl: transformedImageUrl });
+            setLoadingMessage("");
+            Alert.alert("Image Downloaded Successful");
             return;
         }
 
 
         try {
-            setLoadingMessage("Initiating Background Removal...");
+            setLoadingMessage("Initiating Eraser...");
             // make sure the image is selected.
             if (img == undefined) {
                 Alert.alert("please select the image first");
                 return;
             }
 
-            setLoadingMessage(" Background Removal in progress...");
+            // check the prompt whether its empty or not.
+            if (prompt.length == 0) {
+                Alert.alert("please enter the prompt");
+                return;
+            }
+
+            // add a delay of 100ms
+            await new Promise(resolve => setTimeout(resolve, 400));
+
+            setLoadingMessage("Erasing in progress...");
             // upload the image to the cloud.
             const response = await uploadAsset({ fileUri: img.uri });
 
@@ -48,9 +66,9 @@ const backgroundRemove = () => {
 
             setLoadingMessage("Finalizing result...");
             // remove the background
-            const transformedImageUrl = await removeImageBackground({ publicId: response.public_id });
+            const transformedImage = await magicEraser({ publicId: response.public_id, prompt: prompt });
 
-            transformedImageUrl && setTransformedImageUrl(transformedImageUrl);
+            transformedImage && setTransformedImageUrl(transformedImage);
 
             setLoadingMessage("");
         } catch (error) {
@@ -60,24 +78,11 @@ const backgroundRemove = () => {
     }
 
 
-    const handleDownload = async () => {
-        if (transformedImageUrl) {
-            setLoadingMessage("Downloading...");
-            await downloadImage({ imageUrl: transformedImageUrl });
-            setLoadingMessage("");
-            Alert.alert("Image Downloaded Successful");
-        } else {
-            Alert.alert("please transform the image first");
-        }
-
-    }
-
-
 
     return (
         <View className='bg-background h-full px-[10px]'>
             <ScrollView>
-                <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Background Remove</Text>
+                <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Magic Eraser</Text>
 
                 {
                     !loadingMessage ?
@@ -100,6 +105,9 @@ const backgroundRemove = () => {
                 }
 
 
+                {/* prompt Area */}
+                <TextInput value={prompt} onChangeText={(e) => setPrompt(e)} numberOfLines={3} placeholder='erase the person in the left from car' className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline' placeholderTextColor={"#65558F"} />
+
 
                 {/* buttons */}
                 <View className='flex-row justify-between items-center mt-4'>
@@ -108,20 +116,19 @@ const backgroundRemove = () => {
                             <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>Cancel</Text>
                         </TouchableOpacity>
                     </Link>
-                    <TouchableOpacity onPress={() => {
-                        handleTransformation();
-                    }} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{transformedImageUrl ? "Save" : "Edit"}</Text>
+                    <TouchableOpacity onPress={handleTransformation} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
+                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{transformedImageUrl ? "Save" : "Erase"}</Text>
                     </TouchableOpacity>
                 </View>
+
             </ScrollView>
 
 
             {/* Ad here  */}
-            {/* <View className='bg-red-400 min-h-20 h-40 w-full'>
+            {/* <View className='bg-red-400 h-52 w-full'>
             </View> */}
         </View>
     )
 }
 
-export default backgroundRemove
+export default MagicEraser
