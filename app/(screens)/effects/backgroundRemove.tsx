@@ -1,6 +1,6 @@
 
-import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native'
+import React, { useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
 import { Image } from 'react-native';
@@ -9,10 +9,12 @@ import { uploadAsset } from '@/cloudinary/imageUpload';
 import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { removeImageBackground } from '@/cloudinary/effects/image/backgroundRemove';
+import { CloudinaryImage } from '@cloudinary/url-gen';
+import LoadingWithMessage from '@/components/loadingWithMessage';
 const backgroundRemove = () => {
     const [img, setImg] = useState<ImagePickerAsset | undefined>(undefined);
-    const [transformedImage, setTransformedImage] = useState<string>("");
-
+    const [transformedImage, setTransformedImage] = useState<CloudinaryImage | undefined>(undefined);
+    const [loadingMessage, setLoadingMessage] = useState("");
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
         setImg(asset)
@@ -26,13 +28,17 @@ const backgroundRemove = () => {
             handleDownload();
             return;
         }
+
+
         try {
+            setLoadingMessage("Initiating Background Removal...");
             // make sure the image is selected.
             if (img == undefined) {
                 Alert.alert("please select the image first");
                 return;
             }
 
+            setLoadingMessage(" Background Removal in progress...");
             // upload the image to the cloud.
             const response = await uploadAsset({ fileUri: img.uri });
 
@@ -41,11 +47,13 @@ const backgroundRemove = () => {
                 return;
             }
 
-
+            setLoadingMessage("Finalizing result...");
             // remove the background
-            const transformedImageUrl = await removeImageBackground({ publicId: response.public_id });
+            const transformedImage = await removeImageBackground({ publicId: response.public_id });
 
-            typeof transformedImageUrl === "string" && setTransformedImage(transformedImageUrl);
+            transformedImage && setTransformedImage(transformedImage);
+
+            setLoadingMessage("");
         } catch (error) {
             console.log(error);
             Alert.alert("Error", "Something went wrong while processing");
@@ -55,12 +63,13 @@ const backgroundRemove = () => {
 
     const handleDownload = async () => {
         if (transformedImage) {
-            await downloadImage({ imageUrl: transformedImage });
+            setLoadingMessage("Downloading...");
+            await downloadImage({ imageUrl: transformedImage.toURL() });
+            setLoadingMessage("");
             Alert.alert("Image Downloaded Successful");
         } else {
             Alert.alert("please transform the image first");
         }
-
 
     }
 
@@ -71,16 +80,25 @@ const backgroundRemove = () => {
             <ScrollView>
                 <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Background Remove</Text>
 
-                <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] items-center rounded-[10px] justify-center'>
-                    {
-                        img ? <Image className='w-full h-full' resizeMode={"contain"} source={{ uri: img.uri }} /> : <View className='items-center gap-y-2'>
-                            <Svg width="32" height="41" viewBox="0 0 32 41" fill="">
-                                <Path d="M20 0.5H4C1.8 0.5 0 2.3 0 4.5V36.5C0 38.7 1.8 40.5 4 40.5H28C30.2 40.5 32 38.7 32 36.5V12.5L20 0.5ZM6 32.5L11 25.834L14 29.834L19 23.168L26 32.5H6ZM18 14.5V3.5L29 14.5H18Z" fill="#e5e7eb" />
-                            </Svg>
-                            <Text style={{ fontFamily: "Outfit-Medium" }} className='text-gray-200 text-xl'>Select Image</Text>
-                        </View>
-                    }
-                </TouchableOpacity>
+                {
+                    !loadingMessage ?
+                        <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] items-center rounded-[10px] justify-center'>
+                            {
+                                img ?
+                                    transformedImage ?
+                                        <Image resizeMode={"contain"} className='w-full h-full' source={{ uri: transformedImage?.toURL() }} /> :
+                                        <Image className='w-full h-full' resizeMode={"contain"} source={{ uri: img?.uri }} />
+                                    : <View className='items-center gap-y-2'>
+                                        <Svg width="32" height="41" viewBox="0 0 32 41" fill="">
+                                            <Path d="M20 0.5H4C1.8 0.5 0 2.3 0 4.5V36.5C0 38.7 1.8 40.5 4 40.5H28C30.2 40.5 32 38.7 32 36.5V12.5L20 0.5ZM6 32.5L11 25.834L14 29.834L19 23.168L26 32.5H6ZM18 14.5V3.5L29 14.5H18Z" fill="#e5e7eb" />
+                                        </Svg>
+                                        <Text style={{ fontFamily: "Outfit-Medium" }} className='text-gray-200 text-xl'>Select Image</Text>
+                                    </View>
+
+                            }
+                        </TouchableOpacity> :
+                        <LoadingWithMessage message={loadingMessage} />
+                }
 
 
 

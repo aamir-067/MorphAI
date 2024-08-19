@@ -12,7 +12,7 @@ export const removeImageBackground = async ({
 		const image = cld.image(publicId).effect(removeBackground());
 		console.log("the url of the image is ==>", image.toURL());
 
-		return image.toURL();
+		return image;
 	} catch (error) {
 		console.log(error);
 		return undefined;

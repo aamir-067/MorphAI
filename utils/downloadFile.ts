@@ -28,11 +28,6 @@ export const downloadImage = async ({ imageUrl }: { imageUrl: string }) => {
 		} else {
 			await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
 		}
-
-		Alert.alert(
-			"Download Success",
-			"Image downloaded successfully to DCIM/Pictures!"
-		);
 	} catch (error) {
 		console.log(error);
 		Alert.alert("Error while downloading the file...");

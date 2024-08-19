@@ -16,19 +16,19 @@ export default function Index() {
                 {/* featured tool */}
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                     <Link className="mr-4" href={"/effects/backgroundRemove"}>
-                        <FeatureTool title={"Background Remove"} backgroundColor={"#65558F"} />
+                        <FeatureTool title={"Background Remove"} backgroundColor={"#65558F"} icon={require("@/assets/icons/backgroundRemoveIcon.png")} />
                     </Link>
 
 
                     <Link className="mr-4" href={"/effects/backgroundRemove"}>
-                        <FeatureTool title={"Magic Eraser"} backgroundColor={"#EFB8C8"} />
+                        <FeatureTool title={"Magic Eraser"} backgroundColor={"#EFB8C8"} icon={require("@/assets/icons/magicEraserIcon.png")} />
                     </Link>
                     <Link className="mr-4" href={"/effects/backgroundReplace"}>
-                        <FeatureTool title={"Background Replace"} backgroundColor={"#E8B931"} />
+                        <FeatureTool title={"Background Replace"} backgroundColor={"#E8B931"} icon={require("@/assets/icons/backgroundReplaceIcon.png")} />
                     </Link>
 
                     <Link className="mr-4" href={"/effects/backgroundRemove"}>
-                        <FeatureTool title={"Upscale"} backgroundColor={"#14AE5C"} />
+                        <FeatureTool title={"Upscale"} backgroundColor={"#14AE5C"} icon={require("@/assets/icons/upscaleIcon.png")} />
                     </Link>
                 </ScrollView>
 
