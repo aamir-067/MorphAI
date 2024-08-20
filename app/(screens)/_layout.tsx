@@ -11,11 +11,12 @@ export default function RootLayout() {
                 <NavBar />
                 <Stack>
                     <Stack.Screen name="index" options={{ headerShown: false }} />
-                    <Stack.Screen name="effects/backgroundReplace" options={{ headerShown: false }} />
                     <Stack.Screen name="effects/backgroundRemove" options={{ headerShown: false }} />
-                    <Stack.Screen name="effects/imageUpscale" options={{ headerShown: false }} />
+                    <Stack.Screen name="effects/backgroundReplace" options={{ headerShown: false }} />
                     <Stack.Screen name="effects/imageRestore" options={{ headerShown: false }} />
+                    <Stack.Screen name="effects/imageUpscale" options={{ headerShown: false }} />
                     <Stack.Screen name="effects/magicEraser" options={{ headerShown: false }} />
+                    <Stack.Screen name="effects/generativeReplace" options={{ headerShown: false }} />
                 </Stack>
             </View>
         </>
