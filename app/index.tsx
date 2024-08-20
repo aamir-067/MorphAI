@@ -1,5 +1,5 @@
-import { Text, View, TouchableOpacity, ScrollView, Image, StatusBar } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { Text, View, TouchableOpacity, ScrollView, Image } from "react-native";
+// import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { Link } from "expo-router";
 export default function Index() {
 
@@ -23,7 +23,7 @@ export default function Index() {
 
 
 
-                <Link href={"/(screens)"} asChild>
+                <Link href={"/(screens)"} replace asChild>
                     <TouchableOpacity activeOpacity={0.5} className="w-full bg-accentBlue mt-6 rounded-md items-center justify-center">
                         <Text style={{ fontFamily: "Poppins-SemiBold" }} className="text-text p-2">Get Started</Text>
                     </TouchableOpacity>

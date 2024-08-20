@@ -8,7 +8,7 @@ export default function RootLayout() {
 
             <View className="bg-background h-full">
                 <StatusBar animated barStyle={"light-content"} />
-                <NavBar />
+                {/* <NavBar /> */}
                 <Stack>
                     <Stack.Screen name="index" options={{ headerShown: false }} />
                     <Stack.Screen name="effects/backgroundRemove" options={{ headerShown: false }} />
