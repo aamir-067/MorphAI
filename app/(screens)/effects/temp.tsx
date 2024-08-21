@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
 import { Image } from 'react-native';

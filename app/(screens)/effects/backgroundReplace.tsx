@@ -1,11 +1,10 @@
 import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
 import { Image } from 'react-native';
 import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
-import { CloudinaryImage } from '@cloudinary/url-gen';
 import { downloadImage } from '@/utils/downloadFile';
 import LoadingWithMessage from '@/components/loadingWithMessage';
 import { uploadAsset } from '@/cloudinary/imageUpload';

@@ -5,7 +5,7 @@
 		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/images/icon.png",
-		"scheme": "morphAi",
+		"scheme": "morph-ai",
 		"userInterfaceStyle": "automatic",
 		"splash": {
 			"image": "./assets/images/splash.png",
@@ -20,7 +20,8 @@
 				"foregroundImage": "./assets/images/icon.png",
 				"backgroundColor": "#000000"
 			},
-			"package": "com.aamir067.morphai"
+			"package": "com.aamir067.morphai",
+			"compileSdkVersion": 34
 		},
 		"web": {
 			"bundler": "metro",

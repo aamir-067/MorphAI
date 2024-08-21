@@ -1,5 +1,4 @@
 import { Text, View, ScrollView } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import FeatureTool from "@/components/featurIcon";
 import BackgroundEditTools from "@/components/backgroundEditTools";
 import ImageEnhanceTools from "@/components/imageEnhanceTools";
