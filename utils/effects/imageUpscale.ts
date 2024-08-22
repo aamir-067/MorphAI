@@ -2,7 +2,7 @@ import { server } from "@/CONSTANTS";
 import { ApiResponse } from "@/interfaces/IApiResponse";
 import { ImagePickerAsset } from "expo-image-picker";
 
-export const removeBackground = async ({
+export const imageUpscale = async ({
 	image,
 }: {
 	image: ImagePickerAsset;
@@ -15,16 +15,13 @@ export const removeBackground = async ({
 			type: image?.mimeType,
 		} as any);
 
-		const response = await fetch(
-			`${server}/api/v1/effects/background-remove`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "multipart/form-data",
-				},
-				body: formData,
-			}
-		);
+		const response = await fetch(`${server}/api/v1/effects/image-upscale`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+			body: formData,
+		});
 		console.log(response.ok);
 		if (!response.ok) {
 			return undefined;

@@ -1,3 +1,4 @@
+import { server } from "@/CONSTANTS";
 import { ApiResponse } from "@/interfaces/IApiResponse";
 import { ImagePickerAsset } from "expo-image-picker";
 
@@ -19,7 +20,7 @@ export const replaceBackground = async ({
 		formData.append("prompt", prompt);
 
 		const response = await fetch(
-			"http://10.0.2.2:3000/api/v1/effects/background-replace",
+			`${server}/api/v1/effects/background-replace`,
 			{
 				method: "POST",
 				headers: {

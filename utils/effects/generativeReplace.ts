@@ -2,10 +2,18 @@ import { server } from "@/CONSTANTS";
 import { ApiResponse } from "@/interfaces/IApiResponse";
 import { ImagePickerAsset } from "expo-image-picker";
 
-export const removeBackground = async ({
+export const generativeReplace = async ({
 	image,
+	from,
+	to,
+	preserveShape,
+	replaceAllInstances,
 }: {
 	image: ImagePickerAsset;
+	from: string;
+	to: string;
+	preserveShape: boolean;
+	replaceAllInstances: boolean;
 }): Promise<string | undefined> => {
 	try {
 		const formData = new FormData();
@@ -15,8 +23,13 @@ export const removeBackground = async ({
 			type: image?.mimeType,
 		} as any);
 
+		formData.append("from", from);
+		formData.append("to", to);
+		formData.append("preserveShape", preserveShape as any);
+		formData.append("replaceAllInstances", replaceAllInstances as any);
+
 		const response = await fetch(
-			`${server}/api/v1/effects/background-remove`,
+			`${server}/api/v1/effects/generative-remove`,
 			{
 				method: "POST",
 				headers: {
