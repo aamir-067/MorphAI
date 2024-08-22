@@ -4,7 +4,7 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import * as Network from "expo-network";
 export default function RootLayout() {
     const [loaded, error] = useFonts({
         "Outfit-Bold": require("../assets/fonts/Outfit-Bold.ttf"),
@@ -21,19 +21,21 @@ export default function RootLayout() {
     });
 
     useEffect(() => {
-        if (loaded) {
-            SplashScreen.hideAsync();
-        }
-    }, [loaded]);
+        (async () => {
+            if (loaded || error) {
+                const res = await Network.getNetworkStateAsync()
+                if (res.isConnected && res.isInternetReachable) {
+                    SplashScreen.hideAsync();
+                } else {
+                    Alert.alert("Network Error", "Please connect to internet");
+                }
+            }
+        })()
+    }, [loaded, error]);
 
     if (!loaded && !error) {
         return null;
     }
-
-    if (error) {
-        SplashScreen.hideAsync();
-    }
-
 
     return (
 

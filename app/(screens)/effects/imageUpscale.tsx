@@ -6,7 +6,7 @@ import { Image } from 'react-native';
 import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
-import { uploadAsset } from '@/cloudinary/imageUpload';
+// import { uploadAsset } from '@/cloudinary/imageUpload';
 import { upscaleImage } from '@/cloudinary/effects/image/upscaleImage';
 import LoadingWithMessage from '@/components/loadingWithMessage';
 
@@ -44,16 +44,17 @@ const ImageUpscale = () => {
 
             setLoadingMessage("Image Upscale in progress...");
             // upload the image to the cloud.
-            const response = await uploadAsset({ fileUri: img.uri });
+            // const response = await uploadAsset({ fileUri: img.uri });
 
-            if (!response) {
-                Alert.alert("Error while uploading the image");
-                return;
-            }
+            // if (!response) {
+            //     Alert.alert("Error while uploading the image");
+            //     return;
+            // }
 
             setLoadingMessage("Finalizing result...");
 
-            const transformedImage = await upscaleImage({ publicId: response.public_id });
+            // const transformedImage = await upscaleImage({ publicId: response.public_id });
+            const transformedImage = await upscaleImage({ publicId: "dedbe6koh" });
 
             transformedImage && setTransformedImageUrl(transformedImage);
 

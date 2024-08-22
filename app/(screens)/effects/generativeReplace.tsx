@@ -6,7 +6,7 @@ import { Image } from 'react-native';
 import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
-import { uploadAsset } from '@/cloudinary/imageUpload';
+// import { uploadAsset } from '@/cloudinary/imageUpload';
 import { generativeReplace } from '@/cloudinary/effects/image/generativeReplace';
 import LoadingWithMessage from '@/components/loadingWithMessage';
 
@@ -53,15 +53,16 @@ const GenerativeReplace = () => {
 
             setLoadingMessage("Replace in progress...");
             // upload the image to the cloud.
-            const response = await uploadAsset({ fileUri: img.uri });
-            if (!response) {
-                Alert.alert("Error while uploading the image");
-                return;
-            }
+            // const response = await uploadAsset({ fileUri: img.uri });
+            // if (!response) {
+            //     Alert.alert("Error while uploading the image");
+            //     return;
+            // }
 
             setLoadingMessage("Finalizing result...");
 
-            const transformedImage = await generativeReplace({ publicId: response.public_id, from, to, preserveGeometry, replaceAll: detectMultiple });
+            // const transformedImage = await generativeReplace({ publicId: response.public_id, from, to, preserveGeometry, replaceAll: detectMultiple });
+            const transformedImage = await generativeReplace({ publicId: "dedbe6koh", from, to, preserveGeometry, replaceAll: detectMultiple });
 
             transformedImage && setTransformedImageUrl(transformedImage);
 

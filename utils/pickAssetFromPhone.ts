@@ -1,5 +1,4 @@
 import * as ImagePicker from "expo-image-picker";
-
 export const getAssetFromGallery = async ({
 	fileType,
 }: {
@@ -20,7 +19,6 @@ export const getAssetFromGallery = async ({
 
 		if (res?.canceled == false) {
 			const asset = res?.assets[0];
-			console.log("asset Selected => ", asset);
 			return asset;
 		}
 

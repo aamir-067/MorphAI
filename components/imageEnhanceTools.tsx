@@ -7,10 +7,10 @@ const BackgroundEditTools = () => {
         <View className='mt-10'>
             <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-2xl mb-2.5'>Image Enhance</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <Link href={"/effects/imageRestore"}>
+                <Link className='mr-4' href={"/effects/imageRestore"}>
                     <ToolCard title={"Image Restore"} img={require("@/assets/images/toolsImages/imageRestore.png")} />
                 </Link>
-                <Link href={"/effects/imageUpscale"}>
+                <Link className='mr-4' href={"/effects/imageUpscale"}>
                     <ToolCard title={"Image Upscale"} img={require("@/assets/images/toolsImages/imageRescale.png")} />
                 </Link>
             </ScrollView>

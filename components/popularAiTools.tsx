@@ -7,11 +7,11 @@ const PopularAiTools = () => {
         <View className='mt-10'>
             <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-2xl mb-2.5'>Popular AI tools</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <Link href={"/effects/magicEraser"}>
+                <Link className='mr-4' href={"/effects/magicEraser"}>
                     <ToolCard title={"Generative Remove"} img={require("@/assets/images/toolsImages/generativeRemove.png")} />
                 </Link>
 
-                <Link href={"/effects/generativeReplace"}>
+                <Link className='mr-4' href={"/effects/generativeReplace"}>
                     <ToolCard title={"Generative Replace"} img={require("@/assets/images/toolsImages/generativeReplace.png")} />
                 </Link>
             </ScrollView>

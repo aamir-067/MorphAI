@@ -7,8 +7,9 @@ import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
 import LoadingWithMessage from '@/components/loadingWithMessage';
-import { uploadAsset } from '@/cloudinary/imageUpload';
+// import { uploadAsset } from '@/cloudinary/imageUpload';
 import { replaceImageBackground } from '@/cloudinary/effects/image/backgroundReplace';
+import { replaceBackground } from '@/utils/effects/replaceBackground';
 
 
 const backgroundReplace = () => {
@@ -37,7 +38,6 @@ const backgroundReplace = () => {
             return;
         }
 
-
         try {
             setLoadingMessage("Initiating Background Replace...");
             // make sure the image is selected.
@@ -46,30 +46,14 @@ const backgroundReplace = () => {
                 return;
             }
 
-            // check the prompt whether its empty or not.
-            if (prompt.length == 0) {
-                Alert.alert("please enter the prompt");
-                return;
-            }
-
-            // add a delay of 100ms
-            await new Promise(resolve => setTimeout(resolve, 100));
-
             setLoadingMessage("Background Replace in progress...");
-            // upload the image to the cloud.
-            const response = await uploadAsset({ fileUri: img.uri });
 
-            if (!response) {
-                Alert.alert("Error while uploading the image");
-                return;
+            const transformedUrl = await replaceBackground({ image: img, prompt: prompt });
+            if (transformedUrl) {
+                setTransformedImageUrl(transformedUrl);
+            } else {
+                Alert.alert("Error", "Please try again later");
             }
-
-            setLoadingMessage("Finalizing result...");
-            // remove the background
-            const transformedImage = await replaceImageBackground({ publicId: response.public_id, prompt: prompt });
-
-            transformedImage && setTransformedImageUrl(transformedImage);
-
             setLoadingMessage("");
         } catch (error) {
             console.log(error);

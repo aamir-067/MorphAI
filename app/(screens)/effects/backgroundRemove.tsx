@@ -5,11 +5,10 @@ import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
 import { Image } from 'react-native';
 import { downloadImage } from '@/utils/downloadFile';
-import { uploadAsset } from '@/cloudinary/imageUpload';
 import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
-import { removeImageBackground } from '@/cloudinary/effects/image/backgroundRemove';
 import LoadingWithMessage from '@/components/loadingWithMessage';
+import { removeBackground } from '@/utils/effects/removeBackground';
 const backgroundRemove = () => {
     const [img, setImg] = useState<ImagePickerAsset | undefined>(undefined);
     const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>(undefined);
@@ -24,10 +23,12 @@ const backgroundRemove = () => {
 
         // if their is transformed Image then download it.
         if (transformedImageUrl) {
-            handleDownload();
+            setLoadingMessage("Downloading...");
+            await downloadImage({ imageUrl: transformedImageUrl });
+            setLoadingMessage("");
+            Alert.alert("Image Downloaded Successful");
             return;
         }
-
 
         try {
             setLoadingMessage("Initiating Background Removal...");
@@ -37,41 +38,21 @@ const backgroundRemove = () => {
                 return;
             }
 
-            setLoadingMessage(" Background Removal in progress...");
-            // upload the image to the cloud.
-            const response = await uploadAsset({ fileUri: img.uri });
+            setLoadingMessage("Background Removing in progress...");
 
-            if (!response) {
-                Alert.alert("Error while uploading the image");
-                return;
+            const transformedUrl = await removeBackground({ image: img });
+
+            if (transformedUrl) {
+                setTransformedImageUrl(transformedUrl);
+            } else {
+                Alert.alert("Error", "Please try again later");
             }
-
-            setLoadingMessage("Finalizing result...");
-            // remove the background
-            const transformedImageUrl = await removeImageBackground({ publicId: response.public_id });
-
-            transformedImageUrl && setTransformedImageUrl(transformedImageUrl);
-
             setLoadingMessage("");
         } catch (error) {
             console.log(error);
             Alert.alert("Error", "Something went wrong while processing");
         }
     }
-
-
-    const handleDownload = async () => {
-        if (transformedImageUrl) {
-            setLoadingMessage("Downloading...");
-            await downloadImage({ imageUrl: transformedImageUrl });
-            setLoadingMessage("");
-            Alert.alert("Image Downloaded Successful");
-        } else {
-            Alert.alert("please transform the image first");
-        }
-
-    }
-
 
 
     return (
@@ -109,7 +90,7 @@ const backgroundRemove = () => {
                         </TouchableOpacity>
                     </Link>
                     <TouchableOpacity onPress={() => {
-                        handleTransformation();
+                        handleTransformation()
                     }} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
                         <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{transformedImageUrl ? "Save" : "Edit"}</Text>
                     </TouchableOpacity>

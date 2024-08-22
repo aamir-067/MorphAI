@@ -7,7 +7,7 @@ import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
 import LoadingWithMessage from '@/components/loadingWithMessage';
-import { uploadAsset } from '@/cloudinary/imageUpload';
+// import { uploadAsset } from '@/cloudinary/imageUpload';
 import { magicEraser } from '@/cloudinary/effects/image/magicEraser';
 
 
@@ -57,16 +57,17 @@ const MagicEraser = () => {
 
             setLoadingMessage("Erasing in progress...");
             // upload the image to the cloud.
-            const response = await uploadAsset({ fileUri: img.uri });
+            // const response = await uploadAsset({ fileUri: img.uri });
 
-            if (!response) {
-                Alert.alert("Error while uploading the image");
-                return;
-            }
+            // if (!response) {
+            //     Alert.alert("Error while uploading the image");
+            //     return;
+            // }
 
             setLoadingMessage("Finalizing result...");
             // remove the background
-            const transformedImage = await magicEraser({ publicId: response.public_id, prompt: prompt });
+            // const transformedImage = await magicEraser({ publicId: response.public_id, prompt: prompt });
+            const transformedImage = await magicEraser({ publicId: "dedbe6koh", prompt: prompt });
 
             transformedImage && setTransformedImageUrl(transformedImage);
 
