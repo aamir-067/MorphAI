@@ -6,9 +6,8 @@ import { Image } from 'react-native';
 import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
-// import { uploadAsset } from '@/cloudinary/imageUpload';
-import { upscaleImage } from '@/cloudinary/effects/image/upscaleImage';
 import LoadingWithMessage from '@/components/loadingWithMessage';
+import { imageUpscale } from '@/utils/effects/imageUpscale';
 
 
 const ImageUpscale = () => {
@@ -32,9 +31,7 @@ const ImageUpscale = () => {
             return;
         }
 
-
         try {
-            setLoadingMessage("Initiating Image Upscale...");
             // make sure the image is selected.
             if (img == undefined) {
                 Alert.alert("please select the image first");
@@ -43,25 +40,20 @@ const ImageUpscale = () => {
 
 
             setLoadingMessage("Image Upscale in progress...");
-            // upload the image to the cloud.
-            // const response = await uploadAsset({ fileUri: img.uri });
 
-            // if (!response) {
-            //     Alert.alert("Error while uploading the image");
-            //     return;
-            // }
+            const transformedUrl = await imageUpscale({ image: img });
 
-            setLoadingMessage("Finalizing result...");
-
-            // const transformedImage = await upscaleImage({ publicId: response.public_id });
-            const transformedImage = await upscaleImage({ publicId: "dedbe6koh" });
-
-            transformedImage && setTransformedImageUrl(transformedImage);
-
-            setLoadingMessage("");
+            if (transformedUrl) {
+                setTransformedImageUrl(transformedUrl);
+            } else {
+                Alert.alert("Error", "Please try again later");
+            }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             Alert.alert("Error", "Something went wrong while processing");
+        }
+        finally {
+            setLoadingMessage("");
         }
     }
 

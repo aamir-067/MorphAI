@@ -6,8 +6,7 @@ import { Image } from 'react-native';
 import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
-// import { uploadAsset } from '@/cloudinary/imageUpload';
-import { imageRestore } from '@/cloudinary/effects/image/imageRestore';
+import { imageRestore } from '@/utils/effects/imageRestore';
 import LoadingWithMessage from '@/components/loadingWithMessage';
 
 
@@ -33,9 +32,7 @@ const ImageRestore = () => {
             return;
         }
 
-
         try {
-            setLoadingMessage("Initiating Image Upscale...");
             // make sure the image is selected.
             if (img == undefined) {
                 Alert.alert("please select the image first");
@@ -43,26 +40,21 @@ const ImageRestore = () => {
             }
 
 
-            setLoadingMessage("Image Upscale in progress...");
-            // upload the image to the cloud.
-            // const response = await uploadAsset({ fileUri: img.uri });
+            setLoadingMessage("Image Restoration in progress...");
 
-            // if (!response) {
-            //     Alert.alert("Error while uploading the image");
-            //     return;
-            // }
+            const transformedUrl = await imageRestore({ image: img });
 
-            setLoadingMessage("Finalizing result...");
-
-            // const transformedImage = await imageRestore({ publicId: response.public_id });
-            const transformedImage = await imageRestore({ publicId: "dedbe6koh" });
-
-            transformedImage && setTransformedImageUrl(transformedImage);
-
-            setLoadingMessage("");
+            if (transformedUrl) {
+                setTransformedImageUrl(transformedUrl);
+            } else {
+                Alert.alert("Error", "Please try again later");
+            }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             Alert.alert("Error", "Something went wrong while processing");
+        }
+        finally {
+            setLoadingMessage("");
         }
     }
 

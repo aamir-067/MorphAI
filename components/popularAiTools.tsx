@@ -1,5 +1,4 @@
 import { View, Text, ScrollView } from 'react-native'
-import React from 'react'
 import ToolCard from './toolCard'
 import { Link } from 'expo-router'
 const PopularAiTools = () => {
@@ -11,7 +10,7 @@ const PopularAiTools = () => {
                     <ToolCard title={"Generative Remove"} img={require("@/assets/images/toolsImages/generativeRemove.png")} />
                 </Link>
 
-                <Link className='mr-4' href={"/effects/generativeReplace"}>
+                <Link className='' href={"/effects/generativeReplace"}> {/* add mr-4 after you add the third effect */}
                     <ToolCard title={"Generative Replace"} img={require("@/assets/images/toolsImages/generativeReplace.png")} />
                 </Link>
             </ScrollView>

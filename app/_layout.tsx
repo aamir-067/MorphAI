@@ -8,13 +8,9 @@ import * as Network from "expo-network";
 export default function RootLayout() {
     const [loaded, error] = useFonts({
         "Outfit-Bold": require("../assets/fonts/Outfit-Bold.ttf"),
-        "Outfit-Light": require("../assets/fonts/Outfit-Light.ttf"),
         "Outfit-Medium": require("../assets/fonts/Outfit-Medium.ttf"),
         "Outfit-Regular": require("../assets/fonts/Outfit-Regular.ttf"),
         "Outfit-SemiBold": require("../assets/fonts/Outfit-SemiBold.ttf"),
-        "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
-        "Poppins-Light": require("../assets/fonts/Poppins-Light.ttf"),
-        "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
         "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
         "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
 
@@ -41,7 +37,7 @@ export default function RootLayout() {
 
         <SafeAreaView className="bg-background h-full">
             <StatusBar animated={true} barStyle={"light-content"} />
-            <Stack screenOptions={{ navigationBarHidden: true }}>
+            <Stack screenOptions={{ navigationBarHidden: true, navigationBarColor: "dark" }}>
                 <Stack.Screen name="index" options={{ headerShown: false }} />
                 <Stack.Screen name="(screens)" options={{ headerShown: false }} />
             </Stack>

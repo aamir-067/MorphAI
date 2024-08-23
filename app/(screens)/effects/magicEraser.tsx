@@ -7,13 +7,14 @@ import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
 import LoadingWithMessage from '@/components/loadingWithMessage';
-// import { uploadAsset } from '@/cloudinary/imageUpload';
-import { magicEraser } from '@/cloudinary/effects/image/magicEraser';
+import { generativeRemove } from '@/utils/effects/generativeRemove';
 
 
 const MagicEraser = () => {
     const [img, setImg] = useState<ImagePickerAsset | undefined>(undefined);
     const [prompt, setPrompt] = useState<string>("");
+    const [removeAllInstances, setRemoveAllInstances] = useState(false);
+    const [removeShadows, setRemoveShadows] = useState(false);
     const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>(undefined)
     const [loadingMessage, setLoadingMessage] = useState("");
 
@@ -37,44 +38,35 @@ const MagicEraser = () => {
             return;
         }
 
-
         try {
-            setLoadingMessage("Initiating Eraser...");
             // make sure the image is selected.
             if (img == undefined) {
                 Alert.alert("please select the image first");
                 return;
             }
 
-            // check the prompt whether its empty or not.
-            if (prompt.length == 0) {
-                Alert.alert("please enter the prompt");
+
+            if (prompt.length === 0) {
+                Alert.alert("Prompt Missing", "Please provide a prompt to imitate process");
                 return;
             }
 
-            // add a delay of 100ms
-            await new Promise(resolve => setTimeout(resolve, 400));
 
-            setLoadingMessage("Erasing in progress...");
-            // upload the image to the cloud.
-            // const response = await uploadAsset({ fileUri: img.uri });
+            setLoadingMessage("Image Restoration in progress...");
 
-            // if (!response) {
-            //     Alert.alert("Error while uploading the image");
-            //     return;
-            // }
+            const transformedUrl = await generativeRemove({ image: img, prompt, removeAllInstances, removeShadows });
 
-            setLoadingMessage("Finalizing result...");
-            // remove the background
-            // const transformedImage = await magicEraser({ publicId: response.public_id, prompt: prompt });
-            const transformedImage = await magicEraser({ publicId: "dedbe6koh", prompt: prompt });
-
-            transformedImage && setTransformedImageUrl(transformedImage);
-
-            setLoadingMessage("");
+            if (transformedUrl) {
+                setTransformedImageUrl(transformedUrl);
+            } else {
+                Alert.alert("Error", "Please try again later");
+            }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             Alert.alert("Error", "Something went wrong while processing");
+        }
+        finally {
+            setLoadingMessage("");
         }
     }
 
@@ -109,6 +101,29 @@ const MagicEraser = () => {
                 {/* prompt Area */}
                 <TextInput value={prompt} onChangeText={(e) => setPrompt(e)} numberOfLines={3} placeholder='erase the person in the left from car' className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline' placeholderTextColor={"#65558F"} />
 
+
+                {/* to remove shadows, and target multiple instances */}
+                <View className='flex-row justify-between items-center mt-4'>
+
+                    <TouchableOpacity onPress={() => setRemoveAllInstances(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
+                        <View className='w-5 h-5 bg-backgroundContainer rounded-md items-center justify-center'>
+                            <View style={{
+                                backgroundColor: removeAllInstances ? "#326AFD" : "white",
+                            }} className='w-3 h-3 bg-red-400 rounded-full' />
+                        </View>
+                        <Text className='text-text ml-2'>Detect multiple</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => setRemoveShadows(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
+                        <View className='w-5 h-5 bg-backgroundContainer rounded-md items-center justify-center'>
+                            <View style={{
+                                backgroundColor: removeShadows ? "#326AFD" : "white",
+                            }} className='w-3 h-3 bg-red-400 rounded-full' />
+                        </View>
+                        <Text className='text-text ml-2'>Remove Shadows</Text>
+                    </TouchableOpacity>
+
+                </View>
 
                 {/* buttons */}
                 <View className='flex-row justify-between items-center mt-4'>

@@ -12,7 +12,7 @@ export default function Index() {
                 <Text style={{ fontFamily: "Outfit-Medium" }} className="text-text text-3xl my-5">Featured Tools</Text>
 
                 {/* featured tool */}
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                <ScrollView className="mx-auto" horizontal={true} showsHorizontalScrollIndicator={false}>
                     <Link className="mr-4" href={"/effects/backgroundRemove"}>
                         <FeatureTool title={"Background Remove"} backgroundColor={"#65558F"} icon={require("@/assets/icons/backgroundRemoveIcon.png")} />
                     </Link>
@@ -40,6 +40,8 @@ export default function Index() {
                 <PopularAiTools />
 
 
+                {/* to keep some distance from bottom */}
+                <View className="h-8"></View>
 
             </ScrollView >
         </View >

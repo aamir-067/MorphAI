@@ -7,8 +7,6 @@ import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
 import LoadingWithMessage from '@/components/loadingWithMessage';
-// import { uploadAsset } from '@/cloudinary/imageUpload';
-import { replaceImageBackground } from '@/cloudinary/effects/image/backgroundReplace';
 import { replaceBackground } from '@/utils/effects/replaceBackground';
 
 
@@ -39,10 +37,14 @@ const backgroundReplace = () => {
         }
 
         try {
-            setLoadingMessage("Initiating Background Replace...");
             // make sure the image is selected.
             if (img == undefined) {
                 Alert.alert("please select the image first");
+                return;
+            }
+
+            if (prompt.length === 0) {
+                Alert.alert("Prompt Missing", "Please provide a prompt to imitate process");
                 return;
             }
 
@@ -54,10 +56,12 @@ const backgroundReplace = () => {
             } else {
                 Alert.alert("Error", "Please try again later");
             }
-            setLoadingMessage("");
+
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             Alert.alert("Error", "Something went wrong while processing");
+        } finally {
+            setLoadingMessage("");
         }
     }
 

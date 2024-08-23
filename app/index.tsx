@@ -1,5 +1,4 @@
 import { Text, View, TouchableOpacity, ScrollView, Image } from "react-native";
-// import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { Link } from "expo-router";
 export default function Index() {
 

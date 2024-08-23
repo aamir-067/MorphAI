@@ -11,7 +11,7 @@ const BackgroundEditTools = () => {
                 <Link className='mr-4' href={"/effects/backgroundRemove"}>
                     <ToolCard title={"Remove Background"} img={require("@/assets/images/toolsImages/backgroundRemove.png")} />
                 </Link>
-                <Link className='mr-4' href={"/effects/backgroundReplace"}>
+                <Link className='' href={"/effects/backgroundReplace"}> {/* add mr-4 after you add the third effect */}
                     <ToolCard title={"Replace Background"} img={require("@/assets/images/toolsImages/backgroundReplace.png")} />
                 </Link>
             </ScrollView>

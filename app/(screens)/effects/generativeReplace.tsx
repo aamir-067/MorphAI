@@ -6,8 +6,7 @@ import { Image } from 'react-native';
 import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
-// import { uploadAsset } from '@/cloudinary/imageUpload';
-import { generativeReplace } from '@/cloudinary/effects/image/generativeReplace';
+import { generativeReplace } from '@/utils/effects/generativeReplace';
 import LoadingWithMessage from '@/components/loadingWithMessage';
 
 
@@ -36,10 +35,7 @@ const GenerativeReplace = () => {
             return;
         }
 
-
-
         try {
-            setLoadingMessage("Initiating Replace...");
             // make sure the image is selected.
             if (img == undefined) {
                 Alert.alert("please select the image first");
@@ -47,29 +43,23 @@ const GenerativeReplace = () => {
             }
 
             if (from == "" || to == "") {
-                Alert.alert("please enter both the values");
+                Alert.alert("Missing arguments", "please enter both From and To values to proceed");
                 return;
             }
 
             setLoadingMessage("Replace in progress...");
-            // upload the image to the cloud.
-            // const response = await uploadAsset({ fileUri: img.uri });
-            // if (!response) {
-            //     Alert.alert("Error while uploading the image");
-            //     return;
-            // }
 
-            setLoadingMessage("Finalizing result...");
-
-            // const transformedImage = await generativeReplace({ publicId: response.public_id, from, to, preserveGeometry, replaceAll: detectMultiple });
-            const transformedImage = await generativeReplace({ publicId: "dedbe6koh", from, to, preserveGeometry, replaceAll: detectMultiple });
-
-            transformedImage && setTransformedImageUrl(transformedImage);
-
-            setLoadingMessage("");
+            const transformedUrl = await generativeReplace({ image: img, from, to, preserveShape: preserveGeometry, replaceAllInstances: detectMultiple });
+            if (transformedUrl) {
+                setTransformedImageUrl(transformedUrl);
+            } else {
+                Alert.alert("Error", "Please try again later");
+            }
         } catch (error) {
-            console.log(error);
-            Alert.alert("Error", "Something went wrong while processing");
+            // console.log(error);
+            Alert.alert("Error", "Something went wrong while Generative Replace effect");
+        } finally {
+            setLoadingMessage("");
         }
     }
 

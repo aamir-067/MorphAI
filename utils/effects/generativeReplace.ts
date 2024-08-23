@@ -17,6 +17,7 @@ export const generativeReplace = async ({
 }): Promise<string | undefined> => {
 	try {
 		const formData = new FormData();
+
 		formData.append("image", {
 			uri: image?.uri,
 			name: image?.fileName,
@@ -28,8 +29,13 @@ export const generativeReplace = async ({
 		formData.append("preserveShape", preserveShape as any);
 		formData.append("replaceAllInstances", replaceAllInstances as any);
 
+		console.log({
+			uri: image?.uri,
+			name: image?.fileName,
+			type: image?.mimeType,
+		});
 		const response = await fetch(
-			`${server}/api/v1/effects/generative-remove`,
+			`${server}/api/v1/effects/generative-replace`,
 			{
 				method: "POST",
 				headers: {
@@ -38,7 +44,7 @@ export const generativeReplace = async ({
 				body: formData,
 			}
 		);
-		console.log(response.ok);
+
 		if (!response.ok) {
 			return undefined;
 		}

@@ -31,7 +31,6 @@ const backgroundRemove = () => {
         }
 
         try {
-            setLoadingMessage("Initiating Background Removal...");
             // make sure the image is selected.
             if (img == undefined) {
                 Alert.alert("please select the image first");
@@ -47,10 +46,12 @@ const backgroundRemove = () => {
             } else {
                 Alert.alert("Error", "Please try again later");
             }
-            setLoadingMessage("");
+
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             Alert.alert("Error", "Something went wrong while processing");
+        } finally {
+            setLoadingMessage("");
         }
     }
 
