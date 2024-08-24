@@ -20,7 +20,8 @@
 				"foregroundImage": "./assets/images/icon.png",
 				"backgroundColor": "#000000"
 			},
-			"package": "com.aamir067.morphai"
+			"package": "com.aamir067.morphai",
+			"versionCode": 1
 		},
 		"web": {
 			"bundler": "metro",

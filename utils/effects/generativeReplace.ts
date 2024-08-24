@@ -29,11 +29,6 @@ export const generativeReplace = async ({
 		formData.append("preserveShape", preserveShape as any);
 		formData.append("replaceAllInstances", replaceAllInstances as any);
 
-		console.log({
-			uri: image?.uri,
-			name: image?.fileName,
-			type: image?.mimeType,
-		});
 		const response = await fetch(
 			`${server}/api/v1/effects/generative-replace`,
 			{
