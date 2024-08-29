@@ -8,6 +8,8 @@ import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
 import { generativeReplace } from '@/utils/effects/generativeReplace';
 import LoadingWithMessage from '@/components/loadingWithMessage';
+import BannerAdComponent from '@/ads/banner';
+import { BannerAdSize } from 'react-native-google-mobile-ads';
 
 
 const GenerativeReplace = () => {
@@ -20,6 +22,7 @@ const GenerativeReplace = () => {
     const [loadingMessage, setLoadingMessage] = useState("");
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
+        setTransformedImageUrl("");
         setImg(asset)
     }
 
@@ -31,6 +34,7 @@ const GenerativeReplace = () => {
             setLoadingMessage("Downloading...");
             await downloadImage({ imageUrl: transformedImageUrl });
             setLoadingMessage("");
+            setTransformedImageUrl("");
             Alert.alert("Image Downloaded Successful");
             return;
         }
@@ -136,8 +140,7 @@ const GenerativeReplace = () => {
 
 
             {/* Ad here  */}
-            {/* <View className='bg-red-400 h-52 w-full'>
-            </View> */}
+            <BannerAdComponent size={BannerAdSize.LEADERBOARD} />
         </View>
     )
 }

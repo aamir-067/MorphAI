@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
 import { Image } from 'react-native';
@@ -8,6 +8,9 @@ import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
 import LoadingWithMessage from '@/components/loadingWithMessage';
 import { replaceBackground } from '@/utils/effects/replaceBackground';
+import { rewarded } from '@/ads/reward';
+import { BannerAdSize, RewardedAdEventType } from 'react-native-google-mobile-ads';
+import BannerAdComponent from '@/ads/banner';
 
 
 const backgroundReplace = () => {
@@ -19,19 +22,16 @@ const backgroundReplace = () => {
 
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
+        setTransformedImageUrl(undefined);
         setImg(asset)
     }
-
-
-
-
     const handleTransformation = async () => {
-
         // if their is transformed Image then download it.
         if (transformedImageUrl) {
             setLoadingMessage("Downloading...");
             await downloadImage({ imageUrl: transformedImageUrl });
             setLoadingMessage("");
+            setTransformedImageUrl(undefined);
             Alert.alert("Image Downloaded Successful");
             return;
         }
@@ -57,6 +57,10 @@ const backgroundReplace = () => {
                 Alert.alert("Error", "Please try again later");
             }
 
+            if (!rewardEarned) {
+                rewarded.show();
+            }
+
         } catch (error) {
             // console.log(error);
             Alert.alert("Error", "Something went wrong while processing");
@@ -65,6 +69,32 @@ const backgroundReplace = () => {
         }
     }
 
+
+
+
+    // ========= ad setup ===========
+    const [adLoaded, setAdLoaded] = useState(false);
+    const [rewardEarned, setRewardEarned] = useState(false);
+    useEffect(() => {
+        // const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
+        //     setAdLoaded(true);
+        // });
+        // const unsubscribeEarned = rewarded.addAdEventListener(
+        //     RewardedAdEventType.EARNED_REWARD,
+        //     reward => {
+        //         setRewardEarned(true);
+        //     },
+        // );
+
+        // Start loading the rewarded ad straight away
+        rewarded.load();
+
+        // Unsubscribe from events on unmount
+        return () => {
+            // unsubscribeLoaded();
+            // unsubscribeEarned();
+        };
+    }, [img]);
 
 
     return (
@@ -78,7 +108,10 @@ const backgroundReplace = () => {
                             {
                                 img ?
                                     transformedImageUrl ?
-                                        <Image resizeMode={"contain"} className='w-full h-full' source={{ uri: transformedImageUrl }} /> :
+                                        <Image resizeMode={"contain"}
+                                            // onLoadStart={() => setLoadingMessage("loading...")}
+                                            // onLoadEnd={() => setLoadingMessage("")}
+                                            className='w-full h-full' source={{ uri: transformedImageUrl }} /> :
                                         <Image className='w-full h-full' resizeMode={"contain"} source={{ uri: img?.uri }} />
                                     : <View className='items-center gap-y-2'>
                                         <Svg width="32" height="41" viewBox="0 0 32 41" fill="">
@@ -112,9 +145,7 @@ const backgroundReplace = () => {
             </ScrollView>
 
 
-            {/* Ad here  */}
-            {/* <View className='bg-red-400 h-52 w-full'>
-            </View> */}
+            <BannerAdComponent size={BannerAdSize.LEADERBOARD} />
         </View>
     )
 }

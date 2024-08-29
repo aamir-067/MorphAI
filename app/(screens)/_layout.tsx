@@ -16,6 +16,7 @@ export default function RootLayout() {
                     <Stack.Screen name="effects/imageUpscale" options={{ headerShown: false }} />
                     <Stack.Screen name="effects/magicEraser" options={{ headerShown: false }} />
                     <Stack.Screen name="effects/generativeReplace" options={{ headerShown: false }} />
+                    <Stack.Screen name="effects/improveColors" options={{ headerShown: false }} />
                 </Stack>
             </View>
         </>

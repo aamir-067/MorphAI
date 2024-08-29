@@ -8,6 +8,8 @@ import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
 import LoadingWithMessage from '@/components/loadingWithMessage';
 import { imageUpscale } from '@/utils/effects/imageUpscale';
+import BannerAdComponent from '@/ads/banner';
+import { BannerAdSize } from 'react-native-google-mobile-ads';
 
 
 const ImageUpscale = () => {
@@ -16,6 +18,7 @@ const ImageUpscale = () => {
     const [loadingMessage, setLoadingMessage] = useState("");
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
+        setTransformedImageUrl("");
         setImg(asset)
     }
 
@@ -27,6 +30,7 @@ const ImageUpscale = () => {
             setLoadingMessage("Downloading...");
             await downloadImage({ imageUrl: transformedImageUrl });
             setLoadingMessage("");
+            setTransformedImageUrl("");
             Alert.alert("Image Downloaded Successful");
             return;
         }
@@ -53,7 +57,7 @@ const ImageUpscale = () => {
             Alert.alert("Error", "Something went wrong while processing");
         }
         finally {
-            setLoadingMessage("");
+            // setLoadingMessage("");
         }
     }
 
@@ -69,7 +73,12 @@ const ImageUpscale = () => {
                             {
                                 img ?
                                     transformedImageUrl ?
-                                        <Image resizeMode={"contain"} className='w-full h-full' source={{ uri: transformedImageUrl }} /> :
+                                        <Image
+                                            resizeMode={"contain"}
+                                            className='w-full h-full'
+                                            source={{ uri: transformedImageUrl }}
+                                            onLoadEnd={() => { setLoadingMessage("") }}
+                                        /> :
                                         <Image className='w-full h-full' resizeMode={"contain"} source={{ uri: img?.uri }} />
                                     : <View className='items-center gap-y-2'>
                                         <Svg width="32" height="41" viewBox="0 0 32 41" fill="">
@@ -92,7 +101,7 @@ const ImageUpscale = () => {
                         </TouchableOpacity>
                     </Link>
                     <TouchableOpacity onPress={handleTransformation} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>Edit</Text>
+                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{transformedImageUrl ? "Save" : "Upscale"}</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -100,8 +109,7 @@ const ImageUpscale = () => {
 
 
             {/* Ad here  */}
-            {/* <View className='bg-red-400 h-52 w-full'>
-            </View> */}
+            <BannerAdComponent size={BannerAdSize.LEADERBOARD} />
         </View>
     )
 }

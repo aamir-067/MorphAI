@@ -8,6 +8,8 @@ import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
 import { imageRestore } from '@/utils/effects/imageRestore';
 import LoadingWithMessage from '@/components/loadingWithMessage';
+import BannerAdComponent from '@/ads/banner';
+import { BannerAdSize } from 'react-native-google-mobile-ads';
 
 
 const ImageRestore = () => {
@@ -16,6 +18,7 @@ const ImageRestore = () => {
     const [transformedImageUrl, setTransformedImageUrl] = useState("");
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
+        setTransformedImageUrl("");
         setImg(asset)
     }
 
@@ -28,6 +31,7 @@ const ImageRestore = () => {
             setLoadingMessage("Downloading...");
             await downloadImage({ imageUrl: transformedImageUrl });
             setLoadingMessage("");
+            setTransformedImageUrl("");
             Alert.alert("Image Downloaded Successful");
             return;
         }
@@ -103,8 +107,7 @@ const ImageRestore = () => {
 
 
             {/* Ad here  */}
-            {/* <View className='bg-red-400 h-52 w-full'>
-            </View> */}
+            <BannerAdComponent size={BannerAdSize.LEADERBOARD} />
         </View>
     )
 }

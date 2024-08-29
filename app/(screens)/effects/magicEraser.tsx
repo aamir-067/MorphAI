@@ -8,6 +8,8 @@ import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
 import LoadingWithMessage from '@/components/loadingWithMessage';
 import { generativeRemove } from '@/utils/effects/generativeRemove';
+import BannerAdComponent from '@/ads/banner';
+import { BannerAdSize } from 'react-native-google-mobile-ads';
 
 
 const MagicEraser = () => {
@@ -22,6 +24,7 @@ const MagicEraser = () => {
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
         setImg(asset)
+        setTransformedImageUrl(undefined)
     }
 
 
@@ -34,6 +37,7 @@ const MagicEraser = () => {
             setLoadingMessage("Downloading...");
             await downloadImage({ imageUrl: transformedImageUrl });
             setLoadingMessage("");
+            setTransformedImageUrl(undefined);
             Alert.alert("Image Downloaded Successful");
             return;
         }
@@ -141,8 +145,7 @@ const MagicEraser = () => {
 
 
             {/* Ad here  */}
-            {/* <View className='bg-red-400 h-52 w-full'>
-            </View> */}
+            <BannerAdComponent size={BannerAdSize.LEADERBOARD} />
         </View>
     )
 }

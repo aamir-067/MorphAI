@@ -4,6 +4,9 @@ import BackgroundEditTools from "@/components/backgroundEditTools";
 import ImageEnhanceTools from "@/components/imageEnhanceTools";
 import { Link } from "expo-router";
 import PopularAiTools from "@/components/popularAiTools";
+import BannerAdComponent from "@/ads/banner";
+import { BannerAdSize } from "react-native-google-mobile-ads";
+import NewAddedTools from "@/components/newAddedTools";
 export default function Index() {
 
     return (
@@ -29,6 +32,10 @@ export default function Index() {
                     </Link>
                 </ScrollView>
 
+
+
+                {/* Newly Added */}
+                <NewAddedTools />
                 {/* background Edit Tools */}
                 <BackgroundEditTools />
 
@@ -44,6 +51,7 @@ export default function Index() {
                 <View className="h-8"></View>
 
             </ScrollView >
+            <BannerAdComponent size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} />
         </View >
     );
 }
