@@ -14,15 +14,6 @@ import { GlobalContext } from '@/context/contextProvider';
 import { generalTransformation } from '@/utils/effects/generalTransformation';
 import Checkbox from "expo-checkbox";
 
-// ?  ============= effect boiler plate =============
-// cloudinary.image("me/gr-mug-1.jpg", {effect: "gen_recolor:prompt_(mug;shirt);to-color_8fbc8f;multiple_true"})
-// cloudinary.image("me/gr-chair-1.jpg", {effect: "gen_recolor:prompt_armchair;to-color_FF00FF;multiple_true"})
-// max 3 prompts
-
-
-
-
-
 
 const GenerativeRecolor = () => {
     const [img, setImg] = useState<ImagePickerAsset | undefined>(undefined);
@@ -149,7 +140,7 @@ const GenerativeRecolor = () => {
                     value={prompt}
                     onChangeText={(e) => handleItems(e)}
                     numberOfLines={3}
-                    placeholder={items.length === 0 ? 'Items to recolor separate my comma. 3 Items Max' : items.length >= 3 ? "Max items selected" : "New items"}
+                    placeholder={items.length === 0 ? 'Items to recolor separate my comma. (3 max)' : items.length >= 3 ? "Max items selected" : "New items"}
                     className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline'
                     placeholderTextColor={"#65558F"}
                 />
@@ -174,7 +165,6 @@ const GenerativeRecolor = () => {
                 </View>
 
 
-                {/* to remove shadows, and target multiple instances */}
                 <View className='flex-row justify-between items-center mt-4 gap-x-3'>
                     <TouchableOpacity onPress={() => setMultiple(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
                         <Checkbox value={multiple} onValueChange={setMultiple} color={multiple ? "#326AFD" : "white"} />
@@ -182,7 +172,6 @@ const GenerativeRecolor = () => {
                     </TouchableOpacity>
 
 
-                    {/* <TextInput value={prompt} onChangeText={(e) => setPrompt(e)} numberOfLines={3} placeholder='erase the person in the left from car' className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline' placeholderTextColor={"#65558F"} />   */}
                     <View className='w-1/2 h-full flex-row justify-end gap-x-3 items-center'>
                         <Text className='text-text'>Color</Text>
                         <TouchableOpacity className='bg-green-500 h-full w-8/12 rounded-sm' />
@@ -204,7 +193,6 @@ const GenerativeRecolor = () => {
 
 
                 {/* <ColorPickerModel /> */}
-
             </ScrollView>
 
 

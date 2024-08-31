@@ -2,11 +2,10 @@ import { router, Stack } from "expo-router";
 import { Alert, StatusBar } from "react-native"
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Network from "expo-network";
-// import { appOpenAd } from "@/ads/appOpen";
-import ContextProvider, { GlobalContext } from "@/context/contextProvider";
+import ContextProvider from "@/context/contextProvider";
 export default function RootLayout() {
     const [loaded, error] = useFonts({
         "Outfit-Bold": require("../assets/fonts/Outfit-Bold.ttf"),
@@ -18,16 +17,12 @@ export default function RootLayout() {
 
     });
 
-    // const { firstVisit } = useContext(GlobalContext);
-
     useEffect(() => {
         (async () => {
-            // appOpenAd.load();
             if (loaded || error) {
                 const res = await Network.getNetworkStateAsync()
                 if (res.isConnected && res.isInternetReachable) {
                     SplashScreen.hideAsync();
-                    // (appOpenAd.loaded && !firstVisit) && appOpenAd.show()
                 } else {
                     Alert.alert("Network Error", "Please connect to internet");
                 }

@@ -11,6 +11,7 @@ import LoadingWithMessage from '@/components/loadingWithMessage';
 import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { GlobalContext } from '@/context/contextProvider';
+import Checkbox from 'expo-checkbox';
 
 
 const GenerativeReplace = () => {
@@ -117,20 +118,12 @@ const GenerativeReplace = () => {
                 <View className='flex-row justify-between items-center mt-4'>
 
                     <TouchableOpacity onPress={() => setDetectMultiple(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
-                        <View className='w-5 h-5 bg-backgroundContainer rounded-md items-center justify-center'>
-                            <View style={{
-                                backgroundColor: detectMultiple ? "#326AFD" : "white",
-                            }} className='w-3 h-3 bg-red-400 rounded-full' />
-                        </View>
+                        <Checkbox value={detectMultiple} onValueChange={setDetectMultiple} color={detectMultiple ? "#326AFD" : "white"} />
                         <Text className='text-text ml-2'>Detect multiple</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => setPreserveGeometry(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
-                        <View className='w-5 h-5 bg-backgroundContainer rounded-md items-center justify-center'>
-                            <View style={{
-                                backgroundColor: preserveGeometry ? "#326AFD" : "white",
-                            }} className='w-3 h-3 bg-red-400 rounded-full' />
-                        </View>
+                        <Checkbox value={preserveGeometry} onValueChange={setPreserveGeometry} color={preserveGeometry ? "#326AFD" : "white"} />
                         <Text className='text-text ml-2'>Preserve Geometry</Text>
                     </TouchableOpacity>
 

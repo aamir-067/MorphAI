@@ -4,9 +4,8 @@ export default function RootLayout() {
 
     return (
         <>
-
             <View className="bg-background h-full">
-                <StatusBar animated barStyle={"light-content"} />
+                <StatusBar barStyle={"light-content"} />
                 {/* <NavBar /> */}
                 <Stack screenOptions={{ navigationBarHidden: true, navigationBarColor: "black" }}>
                     <Stack.Screen name="index" options={{ headerShown: false }} />

@@ -11,6 +11,7 @@ import { generativeRemove } from '@/utils/effects/generativeRemove';
 import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { GlobalContext } from '@/context/contextProvider';
+import Checkbox from 'expo-checkbox';
 
 
 const MagicEraser = () => {
@@ -124,20 +125,12 @@ const MagicEraser = () => {
                 <View className='flex-row justify-between items-center mt-4'>
 
                     <TouchableOpacity onPress={() => setRemoveAllInstances(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
-                        <View className='w-5 h-5 bg-backgroundContainer rounded-md items-center justify-center'>
-                            <View style={{
-                                backgroundColor: removeAllInstances ? "#326AFD" : "white",
-                            }} className='w-3 h-3 bg-red-400 rounded-full' />
-                        </View>
+                        <Checkbox value={removeAllInstances} onValueChange={setRemoveAllInstances} color={removeAllInstances ? "#326AFD" : "white"} />
                         <Text className='text-text ml-2'>Detect multiple</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => setRemoveShadows(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
-                        <View className='w-5 h-5 bg-backgroundContainer rounded-md items-center justify-center'>
-                            <View style={{
-                                backgroundColor: removeShadows ? "#326AFD" : "white",
-                            }} className='w-3 h-3 bg-red-400 rounded-full' />
-                        </View>
+                        <Checkbox value={removeShadows} onValueChange={setRemoveShadows} color={removeShadows ? "#326AFD" : "white"} />
                         <Text className='text-text ml-2'>Remove Shadows</Text>
                     </TouchableOpacity>
 

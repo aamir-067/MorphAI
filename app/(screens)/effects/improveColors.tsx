@@ -117,7 +117,9 @@ const ImproveColors = () => {
                                 </View>
                             </TouchableOpacity>
                         </View>
-                        <View className={`bg-outline rounded-md absolute top-full w-full ${showDropdown ? "" : "hidden"}`}>
+
+
+                        <View className={`bg-outline z-20 rounded-md absolute top-full w-full ${showDropdown ? "" : "hidden"}`}>
                             <Pressable onPress={() => {
                                 setMode("indoor");
                                 setShowDropdown(false);
@@ -143,7 +145,7 @@ const ImproveColors = () => {
                 </View>
 
                 {/* buttons */}
-                <View className={`flex-row justify-between items-center ${showDropdown ? "mt-28" : "mt-5"}`}>
+                <View className={`flex-row justify-between items-center pb-10 mt-5`}>
                     <Link href={".."} asChild>
                         <TouchableOpacity activeOpacity={0.5} className='border-2 border-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
                             <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>Cancel</Text>

@@ -13,7 +13,7 @@ const Context = createContext<ContextInterface>({
 });
 export { Context as GlobalContext }
 const ContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const [firstVisit, setFirstVisit] = useState(true);
+    const [firstVisit, setFirstVisit] = useState(false);
     const [allowAds, setAllowAds] = useState(false);
     const isFirstTimeVisiting = async () => {
         try {

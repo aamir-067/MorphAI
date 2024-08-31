@@ -11,7 +11,7 @@ const NewAddedTools = () => {
 
                 {/* TODO: //? will launch in next update once the color picker is resolved */}
                 <Link className='mr-4' href={"/effects/generativeRecolor"}>
-                    <ToolCard title={"Generative Recolors"} img={require("@/assets/images/toolsImages/generativeRecolor.png")} />
+                    <ToolCard title={"Generative Recolor"} img={require("@/assets/images/toolsImages/generativeRecolor.png")} />
                 </Link>
                 <Link className='mr-4' href={"/effects/improveColors"}>
                     <ToolCard title={"Improve Colors"} img={require("@/assets/images/toolsImages/improveColors.jpg")} />
