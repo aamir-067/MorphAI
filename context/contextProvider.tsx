@@ -1,14 +1,20 @@
 
+interface ContextInterface {
+    firstVisit: boolean
+    allowAds: boolean
+}
+
+
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useEffect, useState } from 'react'
-const Context = createContext<{
-    firstVisit: boolean
-}>({
-    firstVisit: true
+const Context = createContext<ContextInterface>({
+    firstVisit: true,
+    allowAds: false
 });
 export { Context as GlobalContext }
 const ContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [firstVisit, setFirstVisit] = useState(true);
+    const [allowAds, setAllowAds] = useState(false);
     const isFirstTimeVisiting = async () => {
         try {
             // const value = await AsyncStorage.getItem('firstVisit');
@@ -32,7 +38,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode }) => {
     }, [])
 
     return (
-        <Context.Provider value={{ firstVisit }}>
+        <Context.Provider value={{ firstVisit, allowAds }}>
             {children}
         </Context.Provider>
     )

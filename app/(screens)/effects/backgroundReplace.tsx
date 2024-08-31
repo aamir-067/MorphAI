@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
 import { Image } from 'react-native';
@@ -11,6 +11,7 @@ import { replaceBackground } from '@/utils/effects/replaceBackground';
 import { rewarded } from '@/ads/reward';
 import { BannerAdSize, RewardedAdEventType } from 'react-native-google-mobile-ads';
 import BannerAdComponent from '@/ads/banner';
+import { GlobalContext } from '@/context/contextProvider';
 
 
 const backgroundReplace = () => {
@@ -18,7 +19,7 @@ const backgroundReplace = () => {
     const [prompt, setPrompt] = useState<string>("");
     const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>(undefined)
     const [loadingMessage, setLoadingMessage] = useState("");
-
+    const { allowAds } = useContext(GlobalContext);
 
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
@@ -26,6 +27,7 @@ const backgroundReplace = () => {
         setImg(asset)
     }
     const handleTransformation = async () => {
+        if (loadingMessage) return;  // means something is processing
         // if their is transformed Image then download it.
         if (transformedImageUrl) {
             setLoadingMessage("Downloading...");
@@ -48,16 +50,18 @@ const backgroundReplace = () => {
                 return;
             }
 
-            setLoadingMessage("Background Replace in progress...");
+            setLoadingMessage("Initializing Background Replace...");
 
             const transformedUrl = await replaceBackground({ image: img, prompt: prompt });
             if (transformedUrl) {
                 setTransformedImageUrl(transformedUrl);
             } else {
                 Alert.alert("Error", "Please try again later");
+                setLoadingMessage("");
             }
 
-            if (!rewardEarned) {
+
+            if (allowAds) {
                 rewarded.show();
             }
 
@@ -73,7 +77,6 @@ const backgroundReplace = () => {
 
 
     // ========= ad setup ===========
-    const [adLoaded, setAdLoaded] = useState(false);
     const [rewardEarned, setRewardEarned] = useState(false);
     useEffect(() => {
         // const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
@@ -103,26 +106,34 @@ const backgroundReplace = () => {
                 <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Background Replace</Text>
 
                 {
-                    !loadingMessage ?
-                        <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] items-center rounded-[10px] justify-center'>
-                            {
-                                img ?
-                                    transformedImageUrl ?
-                                        <Image resizeMode={"contain"}
-                                            // onLoadStart={() => setLoadingMessage("loading...")}
-                                            // onLoadEnd={() => setLoadingMessage("")}
-                                            className='w-full h-full' source={{ uri: transformedImageUrl }} /> :
-                                        <Image className='w-full h-full' resizeMode={"contain"} source={{ uri: img?.uri }} />
-                                    : <View className='items-center gap-y-2'>
-                                        <Svg width="32" height="41" viewBox="0 0 32 41" fill="">
-                                            <Path d="M20 0.5H4C1.8 0.5 0 2.3 0 4.5V36.5C0 38.7 1.8 40.5 4 40.5H28C30.2 40.5 32 38.7 32 36.5V12.5L20 0.5ZM6 32.5L11 25.834L14 29.834L19 23.168L26 32.5H6ZM18 14.5V3.5L29 14.5H18Z" fill="#e5e7eb" />
-                                        </Svg>
-                                        <Text style={{ fontFamily: "Outfit-Medium" }} className='text-gray-200 text-xl'>Select Image</Text>
-                                    </View>
 
-                            }
-                        </TouchableOpacity> :
+                    <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] relative items-center rounded-[10px] justify-center'>
+
+                        <Image
+                            onLoadStart={() => setLoadingMessage("Background Replace in progress...")}
+                            onLoad={() => setLoadingMessage("")}
+                            onError={() => {
+                                setLoadingMessage("")
+                                Alert.alert("Error", "something went wrong while loading images. try again later");
+                            }}
+                            resizeMode={"contain"}
+                            className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
+                            source={{
+                                uri: transformedImageUrl ? transformedImageUrl :
+                                    img?.uri ? img?.uri : "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HD_transparent_picture.png/1200px-HD_transparent_picture.png"
+                            }}
+                        />
+
+                        <View className={`items-center absolute top-1/3 left-1/3 z-0 gap-y-2 ${(img || transformedImageUrl) ? "hidden" : ""}`}>
+                            <Svg width="32" height="41" viewBox="0 0 32 41" fill="">
+                                <Path d="M20 0.5H4C1.8 0.5 0 2.3 0 4.5V36.5C0 38.7 1.8 40.5 4 40.5H28C30.2 40.5 32 38.7 32 36.5V12.5L20 0.5ZM6 32.5L11 25.834L14 29.834L19 23.168L26 32.5H6ZM18 14.5V3.5L29 14.5H18Z" fill="#e5e7eb" />
+                            </Svg>
+                            <Text style={{ fontFamily: "Outfit-Medium" }} className='text-gray-200 text-xl'>Select Image</Text>
+                        </View>
+
+
                         <LoadingWithMessage message={loadingMessage} />
+                    </TouchableOpacity>
                 }
 
 
@@ -138,14 +149,14 @@ const backgroundReplace = () => {
                         </TouchableOpacity>
                     </Link>
                     <TouchableOpacity onPress={handleTransformation} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{transformedImageUrl ? "Save" : "Replace"}</Text>
+                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{(transformedImageUrl && !loadingMessage) ? "Save" : "Replace"}</Text>
                     </TouchableOpacity>
                 </View>
 
             </ScrollView>
 
 
-            <BannerAdComponent size={BannerAdSize.LEADERBOARD} />
+            {allowAds && <BannerAdComponent size={BannerAdSize.LEADERBOARD} />}
         </View>
     )
 }

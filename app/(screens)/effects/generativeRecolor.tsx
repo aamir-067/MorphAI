@@ -1,5 +1,5 @@
-import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native'
-import React, { useContext, useState } from 'react'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert, Pressable } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
 import { Image } from 'react-native';
@@ -11,13 +11,24 @@ import { generativeRemove } from '@/utils/effects/generativeRemove';
 import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { GlobalContext } from '@/context/contextProvider';
+import { generalTransformation } from '@/utils/effects/generalTransformation';
+import Checkbox from "expo-checkbox";
+
+// ?  ============= effect boiler plate =============
+// cloudinary.image("me/gr-mug-1.jpg", {effect: "gen_recolor:prompt_(mug;shirt);to-color_8fbc8f;multiple_true"})
+// cloudinary.image("me/gr-chair-1.jpg", {effect: "gen_recolor:prompt_armchair;to-color_FF00FF;multiple_true"})
+// max 3 prompts
 
 
-const MagicEraser = () => {
+
+
+
+
+const GenerativeRecolor = () => {
     const [img, setImg] = useState<ImagePickerAsset | undefined>(undefined);
     const [prompt, setPrompt] = useState<string>("");
-    const [removeAllInstances, setRemoveAllInstances] = useState(false);
-    const [removeShadows, setRemoveShadows] = useState(false);
+    const [items, setItems] = useState<string[]>([]);
+    const [multiple, setMultiple] = useState(false);
     const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>(undefined)
     const [loadingMessage, setLoadingMessage] = useState("");
     const { allowAds } = useContext(GlobalContext);
@@ -27,8 +38,22 @@ const MagicEraser = () => {
         setImg(asset)
         setTransformedImageUrl(undefined)
     }
+    const handleItems = (e: string) => {
+        if (items.length === 3) {
+            setPrompt("");
+            return;
+        }
+        setPrompt(e);
+        if (e.endsWith(",") && items.length < 3) {
+            setItems(prev => [...prev, e.slice(0, -1).trim()]);
+            setPrompt("");
+        }
+    }
 
-
+    const removeItem = (itemIndex: number) => {
+        const newItems = items.filter((item, index) => index !== itemIndex);
+        setItems(newItems);
+    }
 
 
     const handleTransformation = async () => {
@@ -51,16 +76,19 @@ const MagicEraser = () => {
                 return;
             }
 
-
-            if (prompt.length === 0) {
-                Alert.alert("Prompt Missing", "Please provide a prompt to imitate process");
+            if (items.length === 0) {
+                Alert.alert("Prompt Missing", "Select at least one item to recolor");
                 return;
             }
 
-
-            setLoadingMessage("Initializing magic erase...");
-
-            const transformedUrl = await generativeRemove({ image: img, prompt, removeAllInstances, removeShadows });
+            setLoadingMessage("Initializing generative recolor...");
+            const color = "326AFD"
+            const promptToSend = items.length === 1 ? items.join("") : `(${items.join(";")})`;
+            const transformedUrl = await generalTransformation({
+                image: img,
+                effect: "gen_recolor",
+                args: `prompt_${promptToSend};to-color_${color};multiple_${multiple}`
+            });
 
             if (transformedUrl) {
                 setTransformedImageUrl(transformedUrl);
@@ -81,14 +109,14 @@ const MagicEraser = () => {
     return (
         <View className='bg-background h-full px-[10px]'>
             <ScrollView>
-                <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Magic Eraser</Text>
+                <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Generative Recolor</Text>
 
                 {
 
                     <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] relative items-center rounded-[10px] justify-center'>
 
                         <Image
-                            onLoadStart={() => setLoadingMessage("Magic erase in progress...")}
+                            onLoadStart={() => setLoadingMessage("Generative recolor in progress...")}
                             onPartialLoad={() => { setLoadingMessage("Finalizing result...") }}
                             onLoad={() => setLoadingMessage("")}
                             onError={() => {
@@ -117,30 +145,48 @@ const MagicEraser = () => {
 
 
                 {/* prompt Area */}
-                <TextInput value={prompt} onChangeText={(e) => setPrompt(e)} numberOfLines={3} placeholder='erase the person in the left from car' className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline' placeholderTextColor={"#65558F"} />
+                <TextInput
+                    value={prompt}
+                    onChangeText={(e) => handleItems(e)}
+                    numberOfLines={3}
+                    placeholder={items.length === 0 ? 'Items to recolor separate my comma. 3 Items Max' : items.length >= 3 ? "Max items selected" : "New items"}
+                    className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline'
+                    placeholderTextColor={"#65558F"}
+                />
+
+                {/* items to recolor */}
+                <View className={`flex-row mt-2 w-full flex-wrap gap-x-2 justify-start items-center ${items.length ? "" : "hidden"}`}>
+                    {
+                        items.map((item, index) => {
+                            return (
+                                <TouchableOpacity onPress={() => removeItem(index)} key={index} className='flex-row h-6 pr-2 gap-x-2 bg-outline rounded-full justify-between items-center'>
+                                    <Text
+                                        style={{
+                                            fontFamily: "Poppins-Medium",
+                                        }}
+                                        className='text-text mr-1 mb-0.5 text-sm'
+                                    >{item.toLowerCase()}</Text>
+                                    <Image resizeMode={"contain"} className='w-2.5 aspect-square' source={require("@/assets/icons/crossIcon.png")} />
+                                </TouchableOpacity>
+                            )
+                        })
+                    }
+                </View>
 
 
                 {/* to remove shadows, and target multiple instances */}
-                <View className='flex-row justify-between items-center mt-4'>
-
-                    <TouchableOpacity onPress={() => setRemoveAllInstances(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
-                        <View className='w-5 h-5 bg-backgroundContainer rounded-md items-center justify-center'>
-                            <View style={{
-                                backgroundColor: removeAllInstances ? "#326AFD" : "white",
-                            }} className='w-3 h-3 bg-red-400 rounded-full' />
-                        </View>
-                        <Text className='text-text ml-2'>Detect multiple</Text>
+                <View className='flex-row justify-between items-center mt-4 gap-x-3'>
+                    <TouchableOpacity onPress={() => setMultiple(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
+                        <Checkbox value={multiple} onValueChange={setMultiple} color={multiple ? "#326AFD" : "white"} />
+                        <Text className='text-text ml-2'>Recolor multiple</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => setRemoveShadows(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
-                        <View className='w-5 h-5 bg-backgroundContainer rounded-md items-center justify-center'>
-                            <View style={{
-                                backgroundColor: removeShadows ? "#326AFD" : "white",
-                            }} className='w-3 h-3 bg-red-400 rounded-full' />
-                        </View>
-                        <Text className='text-text ml-2'>Remove Shadows</Text>
-                    </TouchableOpacity>
 
+                    {/* <TextInput value={prompt} onChangeText={(e) => setPrompt(e)} numberOfLines={3} placeholder='erase the person in the left from car' className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline' placeholderTextColor={"#65558F"} />   */}
+                    <View className='w-1/2 h-full flex-row justify-end gap-x-3 items-center'>
+                        <Text className='text-text'>Color</Text>
+                        <TouchableOpacity className='bg-green-500 h-full w-8/12 rounded-sm' />
+                    </View>
                 </View>
 
                 {/* buttons */}
@@ -151,9 +197,13 @@ const MagicEraser = () => {
                         </TouchableOpacity>
                     </Link>
                     <TouchableOpacity onPress={handleTransformation} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{(transformedImageUrl && !loadingMessage) ? "Save" : "Erase"}</Text>
+                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{(transformedImageUrl && !loadingMessage) ? "Save" : "Recolor"}</Text>
                     </TouchableOpacity>
                 </View>
+
+
+
+                {/* <ColorPickerModel /> */}
 
             </ScrollView>
 
@@ -164,4 +214,4 @@ const MagicEraser = () => {
     )
 }
 
-export default MagicEraser
+export default GenerativeRecolor
