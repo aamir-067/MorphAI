@@ -17,6 +17,7 @@ export default function RootLayout() {
                     <Stack.Screen name="effects/generativeReplace" options={{ headerShown: false }} />
                     <Stack.Screen name="effects/improveColors" options={{ headerShown: false }} />
                     <Stack.Screen name="effects/generativeRecolor" options={{ headerShown: false }} />
+                    <Stack.Screen name="effects/generativeFill" options={{ headerShown: false }} />
                 </Stack>
             </View>
         </>

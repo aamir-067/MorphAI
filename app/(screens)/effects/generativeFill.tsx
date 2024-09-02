@@ -15,7 +15,7 @@ import { generalTransformation } from '@/utils/effects/generalTransformation';
 import Checkbox from "expo-checkbox";
 
 
-const GenerativeRecolor = () => {
+const GenerativeFill = () => {
     const [img, setImg] = useState<ImagePickerAsset | undefined>(undefined);
     const [prompt, setPrompt] = useState<string>("");
     const [items, setItems] = useState<string[]>([]);
@@ -100,7 +100,7 @@ const GenerativeRecolor = () => {
     return (
         <View className='bg-background h-full px-[10px]'>
             <ScrollView>
-                <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Generative Recolor</Text>
+                <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Generative Fill</Text>
 
                 {
 
@@ -202,4 +202,4 @@ const GenerativeRecolor = () => {
     )
 }
 
-export default GenerativeRecolor
+export default GenerativeFill

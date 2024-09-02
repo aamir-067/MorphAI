@@ -90,7 +90,7 @@ const GenerativeReplace = () => {
                             className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
                             source={{
                                 uri: transformedImageUrl ? transformedImageUrl :
-                                    img?.uri ? img?.uri : "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HD_transparent_picture.png/1200px-HD_transparent_picture.png"
+                                    img?.uri ? img?.uri : require("@/assets/images/transparent.png")
                             }}
                         />
 

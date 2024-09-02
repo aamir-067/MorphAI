@@ -8,48 +8,28 @@ import BannerAdComponent from "@/ads/banner";
 import FullscreenLoading from "@/components/fullscreenLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Index() {
-    const [loading, setLoading] = useState(false);
-    interstitial.load();
-    const { firstVisit, allowAds } = useContext(GlobalContext)
-
-    const openAdAndRoute = () => {
-        try {
-            if (interstitial.loaded && !firstVisit && allowAds) {
-                interstitial.show();
-            }
-            router.replace("/(screens)")
-        } catch (error) {
-        }
-    }
-
-
-
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
-        if (allowAds && !firstVisit && interstitial.loaded) interstitial.show();
-    }, []);
-
-
-
-    // useEffect(() => {
-    //     (async () => {
-    //         const firstTime = await AsyncStorage.getItem("firstTime");
-    //         if (firstTime !== null && firstTime == "false") {
-    //             setTimeout(() => {
-    //                 router.replace("/(screens)");
-    //                 setLoading(false);
-    //             }, 0)
-    //         } else {
-    //             await AsyncStorage.setItem("firstTime", "false");
-    //             setLoading(false);
-    //         }
-    //     })()
-    // }, [])
+        (async () => {
+            // await AsyncStorage.removeItem("firstTimeOnMorphAiv1.1.0");
+            const firstTime = await AsyncStorage.getItem("firstTimeOnMorphAiv1.1.0");
+            if (firstTime !== null && firstTime == "false") {
+                setTimeout(() => {
+                    router.replace("/(screens)");
+                    setLoading(false);
+                }, 0);
+            } else {
+                await AsyncStorage.setItem("firstTimeOnMorphAiv1.1.0", "false");
+                setLoading(false);
+            }
+        })()
+    }, [])
 
 
     return (
         <View className="bg-background h-full">
             {
-                (!firstVisit || loading) ?
+                (loading) ?
 
                     <View className="w-full h-full justify-center items-center">
                         <FullscreenLoading />
@@ -67,11 +47,11 @@ export default function Index() {
 
                         <Text style={{ fontFamily: "Poppins-Regular" }} className="text-text mt-2">Unlock the power of AI to effortlessly transform your photos. Easily remove backgrounds, enhance details, upscale, and restore images with precision. With just a few taps, create stunning visuals and bring your creative vision to life.</Text>
 
-                        {/* <Link href={"/(screens)"} replace asChild> */}
-                        <TouchableOpacity onPress={openAdAndRoute} activeOpacity={0.5} className="w-full bg-accentBlue mt-6 rounded-md items-center justify-center">
-                            <Text style={{ fontFamily: "Poppins-SemiBold" }} className="text-text p-2">Get Started</Text>
-                        </TouchableOpacity>
-                        {/* </Link> */}
+                        <Link href={"/(screens)"} replace asChild>
+                            <TouchableOpacity activeOpacity={0.5} className="w-full bg-accentBlue mt-6 rounded-md items-center justify-center">
+                                <Text style={{ fontFamily: "Poppins-SemiBold" }} className="text-text p-2">Get Started</Text>
+                            </TouchableOpacity>
+                        </Link>
 
                     </ScrollView >
             }

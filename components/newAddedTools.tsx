@@ -16,6 +16,9 @@ const NewAddedTools = () => {
                 <Link className='mr-4' href={"/effects/improveColors"}>
                     <ToolCard title={"Improve Colors"} img={require("@/assets/images/toolsImages/improveColors.jpg")} />
                 </Link>
+                <Link className='mr-4' href={"/effects/generativeFill"}>
+                    <ToolCard title={"Generative Fill"} img={require("@/assets/images/toolsImages/generativeFill.jpg")} />
+                </Link>
             </ScrollView>
         </View>
     )

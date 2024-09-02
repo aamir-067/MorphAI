@@ -61,7 +61,7 @@ const backgroundReplace = () => {
             }
 
 
-            if (allowAds) {
+            if (allowAds && loaded) {
                 rewarded.show();
             }
 
@@ -74,28 +74,27 @@ const backgroundReplace = () => {
     }
 
 
-
-
     // ========= ad setup ===========
     const [rewardEarned, setRewardEarned] = useState(false);
+    const [loaded, setLoaded] = useState(false);
     useEffect(() => {
-        // const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
-        //     setAdLoaded(true);
-        // });
-        // const unsubscribeEarned = rewarded.addAdEventListener(
-        //     RewardedAdEventType.EARNED_REWARD,
-        //     reward => {
-        //         setRewardEarned(true);
-        //     },
-        // );
+        const unsubscribeEarned = rewarded.addAdEventListener(
+            RewardedAdEventType.EARNED_REWARD,
+            reward => {
+                setRewardEarned(true);
+            },
+        );
 
-        // Start loading the rewarded ad straight away
+        const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, (e) => {
+            setLoaded(true);
+        })
+
         rewarded.load();
 
         // Unsubscribe from events on unmount
         return () => {
-            // unsubscribeLoaded();
-            // unsubscribeEarned();
+            unsubscribeLoaded();
+            unsubscribeEarned();
         };
     }, [img]);
 
@@ -120,7 +119,7 @@ const backgroundReplace = () => {
                             className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
                             source={{
                                 uri: transformedImageUrl ? transformedImageUrl :
-                                    img?.uri ? img?.uri : "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/HD_transparent_picture.png/1200px-HD_transparent_picture.png"
+                                    img?.uri ? img?.uri : require("@/assets/images/transparent.png")
                             }}
                         />
 
