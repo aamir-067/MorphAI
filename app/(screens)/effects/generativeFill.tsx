@@ -107,19 +107,20 @@ const GenerativeFill = () => {
                     <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] relative items-center rounded-[10px] justify-center'>
 
                         <Image
-                            onLoadStart={() => setLoadingMessage("Generative recolor in progress...")}
-                            onPartialLoad={() => { setLoadingMessage("Finalizing result...") }}
+                            onLoadStart={() => setLoadingMessage("Background Replace in progress...")}
                             onLoad={() => setLoadingMessage("")}
                             onError={() => {
                                 setLoadingMessage("")
                                 Alert.alert("Error", "something went wrong while loading images. try again later");
+                                setTransformedImageUrl(undefined)
                             }}
                             resizeMode={"contain"}
                             className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
-                            source={{
-                                uri: transformedImageUrl ? transformedImageUrl :
-                                    img?.uri ? img?.uri : require("@/assets/images/transparent.png")
-                            }}
+                            source={transformedImageUrl
+                                ? { uri: transformedImageUrl }
+                                : img?.uri
+                                    ? { uri: img.uri }
+                                    : require("@/assets/images/transparent.png")}
                         />
 
                         <View className={`items-center absolute top-1/3 left-1/3 z-0 gap-y-2 ${(img || transformedImageUrl) ? "hidden" : ""}`}>

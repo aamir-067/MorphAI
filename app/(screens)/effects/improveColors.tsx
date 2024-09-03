@@ -76,19 +76,20 @@ const ImproveColors = () => {
                     <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] relative items-center rounded-[10px] justify-center'>
 
                         <Image
-                            onLoadStart={() => setLoadingMessage("Color improvement in progress...")}
-                            onPartialLoad={() => setLoadingMessage("Finalizing result")}
+                            onLoadStart={() => setLoadingMessage("Background Replace in progress...")}
                             onLoad={() => setLoadingMessage("")}
                             onError={() => {
                                 setLoadingMessage("")
                                 Alert.alert("Error", "something went wrong while loading images. try again later");
+                                setTransformedImageUrl("")
                             }}
                             resizeMode={"contain"}
                             className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
-                            source={{
-                                uri: transformedImageUrl ? transformedImageUrl :
-                                    img?.uri ? img?.uri : require("@/assets/images/transparent.png")
-                            }}
+                            source={transformedImageUrl
+                                ? { uri: transformedImageUrl }
+                                : img?.uri
+                                    ? { uri: img.uri }
+                                    : require("@/assets/images/transparent.png")}
                         />
 
                         <View className={`items-center absolute top-1/3 left-1/3 z-0 gap-y-2 ${(img || transformedImageUrl) ? "hidden" : ""}`}>
@@ -119,24 +120,26 @@ const ImproveColors = () => {
                         </View>
 
 
-                        <View className={`bg-outline z-20 rounded-md absolute top-full w-full ${showDropdown ? "" : "hidden"}`}>
-                            <Pressable onPress={() => {
-                                setMode("indoor");
-                                setShowDropdown(false);
-                            }}>
-                                <Text style={{
-                                    fontFamily: "Outfit-Medium"
-                                }} className='text-text bg-black/10 p-2 rounded text-lg'>Indoor</Text>
-                            </Pressable>
-                            <Pressable onPress={() => {
-                                setMode("outdoor");
-                                setShowDropdown(false);
-                            }}>
-                                <Text style={{
-                                    fontFamily: "Outfit-Medium"
-                                }} className='text-text bg-black/10 mt-1 p-2 rounded text-lg'>Outdoor</Text>
-                            </Pressable>
-                        </View>
+                        {
+                            showDropdown && <View className={`bg-outline z-50 rounded-md absolute top-full w-full`}>
+                                <Pressable onPress={() => {
+                                    setMode("indoor");
+                                    setShowDropdown(false);
+                                }}>
+                                    <Text style={{
+                                        fontFamily: "Outfit-Medium"
+                                    }} className='text-text bg-black/10 p-2 rounded text-lg'>Indoor</Text>
+                                </Pressable>
+                                <Pressable onPress={() => {
+                                    setMode("outdoor");
+                                    setShowDropdown(false);
+                                }}>
+                                    <Text style={{
+                                        fontFamily: "Outfit-Medium"
+                                    }} className='text-text bg-black/10 mt-1 p-2 rounded text-lg'>Outdoor</Text>
+                                </Pressable>
+                            </View>
+                        }
                     </View>
 
                     <View className='flex-row justify-between h-[50px] overflow-hidden rounded-md bg-backgroundContainer items-center max-w-40 w-[48%]'>
@@ -147,7 +150,7 @@ const ImproveColors = () => {
                 {/* buttons */}
                 <View className={`flex-row justify-between items-center pb-10 mt-5`}>
                     <Link href={".."} asChild>
-                        <TouchableOpacity activeOpacity={0.5} className='border-2 border-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
+                        <TouchableOpacity activeOpacity={0.5} className='border-2 z-0 border-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
                             <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>Cancel</Text>
                         </TouchableOpacity>
                     </Link>

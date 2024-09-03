@@ -11,7 +11,7 @@ const Context = createContext<ContextInterface>({
 });
 export { Context as GlobalContext }
 const ContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const [allowAds, setAllowAds] = useState(true);
+    const [allowAds, setAllowAds] = useState(false);
 
 
 

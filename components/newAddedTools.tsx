@@ -10,15 +10,15 @@ const NewAddedTools = () => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
 
                 {/* TODO: //? will launch in next update once the color picker is resolved */}
-                <Link className='mr-4' href={"/effects/generativeRecolor"}>
+                {/* <Link className='mr-4' href={"/effects/generativeRecolor"}>
                     <ToolCard title={"Generative Recolor"} img={require("@/assets/images/toolsImages/generativeRecolor.png")} />
-                </Link>
+                </Link> */}
                 <Link className='mr-4' href={"/effects/improveColors"}>
                     <ToolCard title={"Improve Colors"} img={require("@/assets/images/toolsImages/improveColors.jpg")} />
                 </Link>
-                <Link className='mr-4' href={"/effects/generativeFill"}>
+                {/* <Link className='mr-4' href={"/effects/generativeFill"}>
                     <ToolCard title={"Generative Fill"} img={require("@/assets/images/toolsImages/generativeFill.jpg")} />
-                </Link>
+                </Link> */}
             </ScrollView>
         </View>
     )

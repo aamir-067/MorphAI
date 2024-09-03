@@ -99,6 +99,7 @@ const backgroundReplace = () => {
     }, [img]);
 
 
+
     return (
         <View className='bg-background h-full px-[10px]'>
             <ScrollView>
@@ -114,13 +115,15 @@ const backgroundReplace = () => {
                             onError={() => {
                                 setLoadingMessage("")
                                 Alert.alert("Error", "something went wrong while loading images. try again later");
+                                setTransformedImageUrl(undefined)
                             }}
                             resizeMode={"contain"}
                             className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
-                            source={{
-                                uri: transformedImageUrl ? transformedImageUrl :
-                                    img?.uri ? img?.uri : require("@/assets/images/transparent.png")
-                            }}
+                            source={transformedImageUrl
+                                ? { uri: transformedImageUrl }
+                                : img?.uri
+                                    ? { uri: img.uri }
+                                    : require("@/assets/images/transparent.png")}
                         />
 
                         <View className={`items-center absolute top-1/3 left-1/3 z-0 gap-y-2 ${(img || transformedImageUrl) ? "hidden" : ""}`}>
