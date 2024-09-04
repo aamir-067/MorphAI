@@ -76,7 +76,7 @@ const ImproveColors = () => {
                     <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] relative items-center rounded-[10px] justify-center'>
 
                         <Image
-                            onLoadStart={() => setLoadingMessage("Background Replace in progress...")}
+                            onLoadStart={() => setLoadingMessage("Color improvement in progress...")}
                             onLoad={() => setLoadingMessage("")}
                             onError={() => {
                                 setLoadingMessage("")
