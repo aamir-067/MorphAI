@@ -1,10 +1,7 @@
-import { Text, View, TouchableOpacity, ScrollView, Image, LogBox } from "react-native";
+import { Text, View, TouchableOpacity, ScrollView, Image } from "react-native";
 import { Link, router } from "expo-router";
-import { useEffect, useState, useContext } from "react";
-import { interstitial } from "@/ads/interstitial";
-import { AdEventType, BannerAdSize } from "react-native-google-mobile-ads";
+import { useEffect, useState } from "react";
 import { GlobalContext } from "@/context/contextProvider";
-import BannerAdComponent from "@/ads/banner";
 import FullscreenLoading from "@/components/fullscreenLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Index() {

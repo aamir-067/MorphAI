@@ -52,6 +52,17 @@ const backgroundReplace = () => {
 
             setLoadingMessage("Initializing Background Replace...");
 
+
+            if (allowAds && rewarded.loaded) {
+                rewarded.show();
+            }
+
+            // if (!rewardEarned) {
+            //     setLoadingMessage("Please watch the ad to proceed");
+            //     return;
+            // }
+
+
             const transformedUrl = await replaceBackground({ image: img, prompt: prompt });
             if (transformedUrl) {
                 setTransformedImageUrl(transformedUrl);
@@ -61,12 +72,8 @@ const backgroundReplace = () => {
             }
 
 
-            if (allowAds && loaded) {
-                rewarded.show();
-            }
-
         } catch (error) {
-            // console.log(error);
+            console.log(error);
             Alert.alert("Error", "Something went wrong while processing");
         } finally {
             setLoadingMessage("");
@@ -75,30 +82,31 @@ const backgroundReplace = () => {
 
 
     // ========= ad setup ===========
-    const [rewardEarned, setRewardEarned] = useState(false);
-    const [loaded, setLoaded] = useState(false);
+    // const [rewardEarned, setRewardEarned] = useState<any>(false);
+    // const [loaded, setLoaded] = useState(false);
+    // useEffect(() => {
+    //     const unsubscribeEarned = rewarded.addAdEventListener(
+    //         RewardedAdEventType.EARNED_REWARD,
+    //         (reward) => {
+    //             setRewardEarned(reward);
+    //         },
+    //     );
+
+    //     const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, (e) => {
+    //         setLoaded(true);
+    //     })
+
+    //     rewarded.load();
+
+    //     // Unsubscribe from events on unmount
+    //     return () => {
+    //         unsubscribeLoaded();
+    //         unsubscribeEarned();
+    //     };
+    // }, [img]);
     useEffect(() => {
-        const unsubscribeEarned = rewarded.addAdEventListener(
-            RewardedAdEventType.EARNED_REWARD,
-            reward => {
-                setRewardEarned(true);
-            },
-        );
-
-        const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, (e) => {
-            setLoaded(true);
-        })
-
         rewarded.load();
-
-        // Unsubscribe from events on unmount
-        return () => {
-            unsubscribeLoaded();
-            unsubscribeEarned();
-        };
     }, [img]);
-
-
 
     return (
         <View className='bg-background h-full px-[10px]'>
@@ -140,7 +148,15 @@ const backgroundReplace = () => {
 
 
                 {/* prompt Area */}
-                <TextInput value={prompt} onChangeText={(e) => setPrompt(e)} numberOfLines={3} placeholder='change background to a green valley with dragons' className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline' placeholderTextColor={"#65558F"} />
+                <TextInput
+                    value={prompt}
+                    onChangeText={(e) => {
+                        setPrompt(e);
+                        setTransformedImageUrl("");
+                    }}
+                    placeholder='change background to a green valley with dragons'
+                    className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline'
+                    placeholderTextColor={"#65558F"} />
 
 
                 {/* buttons */}

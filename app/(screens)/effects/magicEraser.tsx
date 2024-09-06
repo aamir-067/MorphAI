@@ -119,19 +119,57 @@ const MagicEraser = () => {
 
 
                 {/* prompt Area */}
-                <TextInput value={prompt} onChangeText={(e) => setPrompt(e)} numberOfLines={3} placeholder='erase the person in the left from car' className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline' placeholderTextColor={"#65558F"} />
+                <TextInput
+                    value={prompt}
+                    onChangeText={(e) => {
+                        setPrompt(e)
+                        transformedImageUrl && setTransformedImageUrl("");
+                    }}
+
+                    placeholder='erase the person in the left from car'
+                    className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline'
+                    placeholderTextColor={"#65558F"}
+                />
 
 
                 {/* to remove shadows, and target multiple instances */}
                 <View className='flex-row justify-between items-center mt-4'>
-
-                    <TouchableOpacity onPress={() => setRemoveAllInstances(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
-                        <Checkbox value={removeAllInstances} onValueChange={setRemoveAllInstances} color={removeAllInstances ? "#326AFD" : "white"} />
+                    <TouchableOpacity
+                        onPress={() => {
+                            setRemoveAllInstances(prev => !prev)
+                            transformedImageUrl && setTransformedImageUrl("");
+                        }}
+                        activeOpacity={1}
+                        className='flex-row py-1.5 items-center'
+                    >
+                        <Checkbox
+                            value={removeAllInstances}
+                            onValueChange={() => {
+                                setRemoveAllInstances(prev => !prev)
+                                transformedImageUrl && setTransformedImageUrl("");
+                            }}
+                            color={removeAllInstances ? "#326AFD" : "white"}
+                        />
                         <Text className='text-text ml-2'>Detect multiple</Text>
+
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => setRemoveShadows(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
-                        <Checkbox value={removeShadows} onValueChange={setRemoveShadows} color={removeShadows ? "#326AFD" : "white"} />
+                    <TouchableOpacity
+                        onPress={() => {
+                            setRemoveShadows(prev => !prev)
+                            transformedImageUrl && setTransformedImageUrl("");
+                        }}
+                        activeOpacity={1}
+                        className='flex-row py-1.5 items-center'
+                    >
+                        <Checkbox
+                            value={removeShadows}
+                            onValueChange={() => {
+                                setRemoveShadows(prev => !prev)
+                                transformedImageUrl && setTransformedImageUrl("");
+                            }}
+                            color={removeShadows ? "#326AFD" : "white"}
+                        />
                         <Text className='text-text ml-2'>Remove Shadows</Text>
                     </TouchableOpacity>
 

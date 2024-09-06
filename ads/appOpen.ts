@@ -1,5 +1,5 @@
 import { AppOpenAd, AdEventType } from "react-native-google-mobile-ads";
-import { AdIds } from "./ads";
+import { AdIds } from "./adIds";
 
 const adUnitId = AdIds.appOpen;
 

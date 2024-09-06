@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
 import { Image } from 'react-native';
@@ -11,6 +11,7 @@ import { imageUpscale } from '@/utils/effects/imageUpscale';
 import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { GlobalContext } from '@/context/contextProvider';
+import { rewarded } from '@/ads/reward';
 
 
 const ImageUpscale = () => {
@@ -49,6 +50,10 @@ const ImageUpscale = () => {
 
             const transformedUrl = await imageUpscale({ image: img });
 
+            if (rewarded.loaded && allowAds) {
+                rewarded.show();
+            }
+
             if (transformedUrl) {
                 setTransformedImageUrl(transformedUrl);
             } else {
@@ -63,6 +68,10 @@ const ImageUpscale = () => {
         }
     }
 
+
+    useEffect(() => {
+        rewarded.load();
+    }, [img]);
 
     return (
         <View className='bg-background h-full px-[10px]'>

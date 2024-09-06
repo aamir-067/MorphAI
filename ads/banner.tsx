@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Platform } from 'react-native';
 import { BannerAd, BannerAdSize, useForeground } from 'react-native-google-mobile-ads';
-import { AdIds } from './ads';
+import { AdIds } from './adIds';
 
 // const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
 const adUnitId = AdIds.adaptiveBanner

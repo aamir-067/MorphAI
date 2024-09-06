@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity, TextInput, ScrollView, SectionList, Pressable, Alert } from 'react-native'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
 import { Image } from 'react-native';
@@ -11,6 +11,7 @@ import { generalTransformation } from '@/utils/effects/generalTransformation';
 import { GlobalContext } from '@/context/contextProvider';
 import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
+import { rewarded } from '@/ads/reward';
 
 
 const ImproveColors = () => {
@@ -33,10 +34,12 @@ const ImproveColors = () => {
         // if their is transformed Image then download it.
         if (transformedImageUrl) {
             setLoadingMessage("Downloading...");
-            await downloadImage({ imageUrl: transformedImageUrl });
-            setLoadingMessage("");
-            setTransformedImageUrl("");
-            Alert.alert("Image Downloaded Successful");
+            await downloadImage({ imageUrl: transformedImageUrl }).then(() => {
+                Alert.alert("Image Downloaded Successful");
+            }).finally(() => {
+                setLoadingMessage("");
+                setTransformedImageUrl("");
+            })
             return;
         }
 
@@ -49,6 +52,13 @@ const ImproveColors = () => {
 
             setLoadingMessage("Initializing color improvement...");
 
+
+
+            if (allowAds && rewarded.loaded) {
+                rewarded.show();
+            }
+
+
             const transformedUrl = await generalTransformation({ image: img, effect: "improve", args: `${mode}:${Number(blend) > 100 ? 100 : blend.length == 0 ? 70 : blend}` });
 
             if (transformedUrl) {
@@ -57,7 +67,6 @@ const ImproveColors = () => {
                 Alert.alert("Error", "Please try again later");
                 setLoadingMessage("");
             }
-
         } catch (error) {
             console.log(error);
             Alert.alert("Error", "Something went wrong while processing");
@@ -65,6 +74,11 @@ const ImproveColors = () => {
             setLoadingMessage("");
         }
     }
+
+    // ad setup
+    useEffect(() => {
+        rewarded.load();
+    }, [img]);
 
 
     return (
@@ -104,7 +118,7 @@ const ImproveColors = () => {
                     </TouchableOpacity>
                 }
 
-                {/* size of the image. width and height */}
+
                 <View className='flex-row justify-between  mt-4'>
 
                     <View className='max-w-40 w-[48%]'>
@@ -124,6 +138,7 @@ const ImproveColors = () => {
                             showDropdown && <View className={`bg-outline z-50 rounded-md absolute top-full w-full`}>
                                 <Pressable onPress={() => {
                                     setMode("indoor");
+                                    setTransformedImageUrl("");
                                     setShowDropdown(false);
                                 }}>
                                     <Text style={{
@@ -132,6 +147,7 @@ const ImproveColors = () => {
                                 </Pressable>
                                 <Pressable onPress={() => {
                                     setMode("outdoor");
+                                    setTransformedImageUrl("");
                                     setShowDropdown(false);
                                 }}>
                                     <Text style={{
@@ -143,7 +159,27 @@ const ImproveColors = () => {
                     </View>
 
                     <View className='flex-row justify-between h-[50px] overflow-hidden rounded-md bg-backgroundContainer items-center max-w-40 w-[48%]'>
-                        <TextInput onChangeText={(e) => setBlend(e)} value={blend.toString()} keyboardType={"numeric"} keyboardAppearance={"dark"} placeholder='Intensity, default 70' placeholderTextColor={"#65558F"} className=' px-2 h-full text-text' />
+                        <TextInput
+                            onChangeText={(e) => {
+                                setTransformedImageUrl("");
+                                let num = Number(e);
+                                if (num > 100) {
+                                    setBlend("100")
+                                }
+                                else if (num < 0) {
+                                    setBlend("0")
+                                }
+                                else {
+                                    setBlend(num + "")
+                                }
+                            }}
+                            value={blend.toString()}
+                            keyboardType={"numeric"}
+                            keyboardAppearance={"dark"}
+                            placeholder='Intensity, default 70'
+                            placeholderTextColor={"#65558F"}
+                            className=' px-2 h-full text-text'
+                        />
                     </View>
                 </View>
 

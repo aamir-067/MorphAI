@@ -139,7 +139,10 @@ const GenerativeRecolor = () => {
                 {/* prompt Area */}
                 <TextInput
                     value={prompt}
-                    onChangeText={(e) => handleItems(e)}
+                    onChangeText={(e) => {
+                        handleItems(e)
+                        setTransformedImageUrl("");
+                    }}
                     numberOfLines={3}
                     placeholder={items.length === 0 ? 'Items to recolor separate my comma. (3 max)' : items.length >= 3 ? "Max items selected" : "New items"}
                     className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline'
@@ -167,8 +170,22 @@ const GenerativeRecolor = () => {
 
 
                 <View className='flex-row justify-between items-center mt-4 gap-x-3'>
-                    <TouchableOpacity onPress={() => setMultiple(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
-                        <Checkbox value={multiple} onValueChange={setMultiple} color={multiple ? "#326AFD" : "white"} />
+                    <TouchableOpacity
+                        onPress={() => {
+                            setMultiple(prev => !prev);
+                            setTransformedImageUrl("");
+                        }}
+                        activeOpacity={1}
+                        className='flex-row py-1.5 items-center'
+                    >
+                        <Checkbox
+                            value={multiple}
+                            onValueChange={() => {
+                                setMultiple(prev => !prev);
+                                setTransformedImageUrl("");
+                            }}
+                            color={multiple ? "#326AFD" : "white"}
+                        />
                         <Text className='text-text ml-2'>Recolor multiple</Text>
                     </TouchableOpacity>
 
