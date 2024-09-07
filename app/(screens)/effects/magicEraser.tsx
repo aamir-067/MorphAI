@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert, ActivityIndicator } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
@@ -20,6 +20,7 @@ const MagicEraser = () => {
     const [prompt, setPrompt] = useState<string>("");
     const [removeAllInstances, setRemoveAllInstances] = useState(false);
     const [removeShadows, setRemoveShadows] = useState(false);
+    const [buttonText, setButtonText] = useState("Erase");
     const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>(undefined)
     const [loadingMessage, setLoadingMessage] = useState("");
     const { allowAds } = useContext(GlobalContext);
@@ -94,11 +95,15 @@ const MagicEraser = () => {
 
                         <Image
                             onLoadStart={() => setLoadingMessage("Generative remove in progress...")}
-                            onLoad={() => setLoadingMessage("")}
+                            onLoad={() => {
+                                setLoadingMessage("");
+                                transformedImageUrl ? setButtonText("Save") : setButtonText("Erase")
+                            }}
                             onError={() => {
                                 setLoadingMessage("")
                                 Alert.alert("Error", "something went wrong while loading images. try again later");
-                                setTransformedImageUrl(undefined)
+                                setTransformedImageUrl("");
+                                setButtonText("Erase")
                             }}
                             resizeMode={"contain"}
                             className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
@@ -187,7 +192,11 @@ const MagicEraser = () => {
                         </TouchableOpacity>
                     </Link>
                     <TouchableOpacity onPress={handleTransformation} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{(transformedImageUrl && !loadingMessage) ? "Save" : "Erase"}</Text>
+                        {
+                            loadingMessage ?
+                                <ActivityIndicator size="small" color="white" /> :
+                                <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{buttonText}</Text>
+                        }
                     </TouchableOpacity>
                 </View>
 

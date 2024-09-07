@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, TextInput, ScrollView, SectionList, Pressable, Alert } from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, SectionList, Pressable, Alert, ActivityIndicator } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
@@ -21,6 +21,7 @@ const ImproveColors = () => {
     const [mode, setMode] = useState("indoor");
     const [blend, setBlend] = useState("");
     const [loadingMessage, setLoadingMessage] = useState("");
+    const [buttonText, setButtonText] = useState("Improve");
     const [transformedImageUrl, setTransformedImageUrl] = useState("");
     const { allowAds } = useContext(GlobalContext);
     const getPicture = async () => {
@@ -94,11 +95,15 @@ const ImproveColors = () => {
 
                         <Image
                             onLoadStart={() => setLoadingMessage("Color improvement in progress...")}
-                            onLoad={() => setLoadingMessage("")}
+                            onLoad={() => {
+                                setLoadingMessage("");
+                                transformedImageUrl ? setButtonText("Save") : setButtonText("Improve")
+                            }}
                             onError={() => {
                                 setLoadingMessage("")
                                 Alert.alert("Error", "something went wrong while loading images. try again later");
-                                setTransformedImageUrl("")
+                                setTransformedImageUrl("");
+                                setButtonText("Improve")
                             }}
                             resizeMode={"contain"}
                             className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
@@ -195,7 +200,11 @@ const ImproveColors = () => {
                         </TouchableOpacity>
                     </Link>
                     <TouchableOpacity onPress={handleTransformation} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{(transformedImageUrl && !loadingMessage) ? "Save" : "Improve"}</Text>
+                        {
+                            loadingMessage ?
+                                <ActivityIndicator size="small" color="white" /> :
+                                <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{buttonText}</Text>
+                        }
                     </TouchableOpacity>
                 </View>
 

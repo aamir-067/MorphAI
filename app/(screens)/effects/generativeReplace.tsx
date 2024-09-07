@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert, ActivityIndicator } from 'react-native'
 import React, { useCallback, useContext, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
@@ -23,6 +23,7 @@ const GenerativeReplace = () => {
     const [to, setTo] = useState("");
     const [transformedImageUrl, setTransformedImageUrl] = useState("");
     const [loadingMessage, setLoadingMessage] = useState("");
+    const [buttonText, setButtonText] = useState("Replace");
     const { allowAds } = useContext(GlobalContext);
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
@@ -82,11 +83,15 @@ const GenerativeReplace = () => {
                 <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] relative items-center rounded-[10px] justify-center'>
                     <Image
                         onLoadStart={() => setLoadingMessage("Generative Replace in progress...")}
-                        onLoad={() => setLoadingMessage("")}
+                        onLoad={() => {
+                            setLoadingMessage("");
+                            transformedImageUrl ? setButtonText("Save") : setButtonText("Replace")
+                        }}
                         onError={() => {
                             setLoadingMessage("")
                             Alert.alert("Error", "something went wrong while loading images. try again later");
-                            setTransformedImageUrl("")
+                            setTransformedImageUrl("");
+                            setButtonText("Replace")
                         }}
                         resizeMode={"contain"}
                         className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
@@ -186,7 +191,11 @@ const GenerativeReplace = () => {
                         </TouchableOpacity>
                     </Link>
                     <TouchableOpacity onPress={handleTransformation} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{(transformedImageUrl && !loadingMessage) ? "Save" : "Replace"}</Text>
+                        {
+                            loadingMessage ?
+                                <ActivityIndicator size="small" color="white" /> :
+                                <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{buttonText}</Text>
+                        }
                     </TouchableOpacity>
                 </View>
 

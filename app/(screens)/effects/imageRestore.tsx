@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native'
+import { Text, View, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
@@ -20,6 +20,7 @@ const ImageRestore = () => {
     const [loadingMessage, setLoadingMessage] = useState("");
     const [transformedImageUrl, setTransformedImageUrl] = useState("");
     const { allowAds } = useContext(GlobalContext);
+    const [buttonText, setButtonText] = useState("Restore");
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
         setTransformedImageUrl("");
@@ -86,11 +87,15 @@ const ImageRestore = () => {
 
                         <Image
                             onLoadStart={() => setLoadingMessage("Image restore in progress...")}
-                            onLoad={() => setLoadingMessage("")}
+                            onLoad={() => {
+                                setLoadingMessage("");
+                                transformedImageUrl ? setButtonText("Save") : setButtonText("Restore")
+                            }}
                             onError={() => {
                                 setLoadingMessage("")
                                 Alert.alert("Error", "something went wrong while loading images. try again later");
-                                setTransformedImageUrl("")
+                                setTransformedImageUrl("");
+                                setButtonText("Restore")
                             }}
                             resizeMode={"contain"}
                             className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
@@ -121,7 +126,11 @@ const ImageRestore = () => {
                         </TouchableOpacity>
                     </Link>
                     <TouchableOpacity onPress={handleTransformation} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{(transformedImageUrl && !loadingMessage) ? "Save" : "Restore"}</Text>
+                        {
+                            loadingMessage ?
+                                <ActivityIndicator size="small" color="white" /> :
+                                <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{buttonText}</Text>
+                        }
                     </TouchableOpacity>
                 </View>
 
