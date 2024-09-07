@@ -12,6 +12,8 @@ import { rewarded } from '@/ads/reward';
 import { BannerAdSize, RewardedAdEventType } from 'react-native-google-mobile-ads';
 import BannerAdComponent from '@/ads/banner';
 import { GlobalContext } from '@/context/contextProvider';
+import { validateAppVersion } from '@/utils/validateAppVersion';
+// import { requestReview } from '@/utils/requestReview';
 
 
 const backgroundReplace = () => {
@@ -27,6 +29,7 @@ const backgroundReplace = () => {
         setImg(asset)
     }
     const handleTransformation = async () => {
+
         if (loadingMessage) return;  // means something is processing
         // if their is transformed Image then download it.
         if (transformedImageUrl) {
@@ -52,6 +55,8 @@ const backgroundReplace = () => {
 
             setLoadingMessage("Initializing Background Replace...");
 
+            await validateAppVersion();
+
 
             if (allowAds && rewarded.loaded) {
                 rewarded.show();
@@ -66,11 +71,11 @@ const backgroundReplace = () => {
             const transformedUrl = await replaceBackground({ image: img, prompt: prompt });
             if (transformedUrl) {
                 setTransformedImageUrl(transformedUrl);
+                // await requestReview();
             } else {
                 Alert.alert("Error", "Please try again later");
                 setLoadingMessage("");
             }
-
 
         } catch (error) {
             console.log(error);
@@ -152,7 +157,7 @@ const backgroundReplace = () => {
                     value={prompt}
                     onChangeText={(e) => {
                         setPrompt(e);
-                        setTransformedImageUrl("");
+                        transformedImageUrl && setTransformedImageUrl("");
                     }}
                     placeholder='change background to a green valley with dragons'
                     className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline'

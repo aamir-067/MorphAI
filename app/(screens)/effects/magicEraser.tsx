@@ -12,6 +12,7 @@ import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { GlobalContext } from '@/context/contextProvider';
 import Checkbox from 'expo-checkbox';
+import { validateAppVersion } from '@/utils/validateAppVersion';
 
 
 const MagicEraser = () => {
@@ -60,6 +61,9 @@ const MagicEraser = () => {
 
 
             setLoadingMessage("Initializing magic erase...");
+
+
+            await validateAppVersion();
 
             const transformedUrl = await generativeRemove({ image: img, prompt, removeAllInstances, removeShadows });
 

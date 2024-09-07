@@ -7,10 +7,15 @@ import PopularAiTools from "@/components/popularAiTools";
 import BannerAdComponent from "@/ads/banner";
 import { BannerAdSize } from "react-native-google-mobile-ads";
 import NewAddedTools from "@/components/newAddedTools";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { GlobalContext } from "@/context/contextProvider";
+import { validateAppVersion } from "@/utils/validateAppVersion";
 export default function Index() {
     const { allowAds } = useContext(GlobalContext);
+
+    useEffect(() => {
+        validateAppVersion();
+    })
     return (
         <View className="bg-background  h-full">
             <ScrollView className="px-[10px]">

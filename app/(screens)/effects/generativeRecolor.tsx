@@ -13,6 +13,7 @@ import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { GlobalContext } from '@/context/contextProvider';
 import { generalTransformation } from '@/utils/effects/generalTransformation';
 import Checkbox from "expo-checkbox";
+import { validateAppVersion } from '@/utils/validateAppVersion';
 
 
 const GenerativeRecolor = () => {
@@ -73,6 +74,8 @@ const GenerativeRecolor = () => {
             }
 
             setLoadingMessage("Initializing generative recolor...");
+
+            await validateAppVersion();
             const color = "326AFD"
             const promptToSend = items.length === 1 ? items.join("") : `(${items.join(";")})`;
             const transformedUrl = await generalTransformation({

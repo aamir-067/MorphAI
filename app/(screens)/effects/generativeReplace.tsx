@@ -12,6 +12,7 @@ import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { GlobalContext } from '@/context/contextProvider';
 import Checkbox from 'expo-checkbox';
+import { validateAppVersion } from '@/utils/validateAppVersion';
 
 
 const GenerativeReplace = () => {
@@ -56,6 +57,8 @@ const GenerativeReplace = () => {
 
             setLoadingMessage("Initializing Generative Replace...");
 
+
+            await validateAppVersion();
             const transformedUrl = await generativeReplace({ image: img, from, to, preserveShape: preserveGeometry, replaceAllInstances: detectMultiple });
             if (transformedUrl) {
                 setTransformedImageUrl(transformedUrl);

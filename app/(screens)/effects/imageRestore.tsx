@@ -11,6 +11,8 @@ import LoadingWithMessage from '@/components/loadingWithMessage';
 import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { GlobalContext } from '@/context/contextProvider';
+import { validateAppVersion } from '@/utils/validateAppVersion';
+// import { requestReview } from '@/utils/requestReview';
 
 
 const ImageRestore = () => {
@@ -45,10 +47,14 @@ const ImageRestore = () => {
 
 
             setLoadingMessage("Initializing Image Restoration...");
+
+
+            await validateAppVersion();
             const transformedUrl = await imageRestore({ image: img });
 
             if (transformedUrl) {
                 setTransformedImageUrl(transformedUrl);
+                // await requestReview();
             } else {
                 Alert.alert("Error", "Please try again later");
                 setLoadingMessage("")

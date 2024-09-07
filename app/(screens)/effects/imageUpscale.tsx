@@ -12,6 +12,7 @@ import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { GlobalContext } from '@/context/contextProvider';
 import { rewarded } from '@/ads/reward';
+import { validateAppVersion } from '@/utils/validateAppVersion';
 
 
 const ImageUpscale = () => {
@@ -47,6 +48,9 @@ const ImageUpscale = () => {
 
 
             setLoadingMessage("Initializing image upscale...");
+
+            await validateAppVersion();
+
 
             const transformedUrl = await imageUpscale({ image: img });
 

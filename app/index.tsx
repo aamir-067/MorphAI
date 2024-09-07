@@ -1,13 +1,14 @@
-import { Text, View, TouchableOpacity, ScrollView, Image } from "react-native";
+import { Text, View, TouchableOpacity, ScrollView, Image, Alert, BackHandler } from "react-native";
 import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
-import { GlobalContext } from "@/context/contextProvider";
 import FullscreenLoading from "@/components/fullscreenLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { validateAppVersion } from "@/utils/validateAppVersion";
 export default function Index() {
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         (async () => {
+            await validateAppVersion();
             // await AsyncStorage.removeItem("firstTimeOnMorphAiv1.1.0");
             const firstTime = await AsyncStorage.getItem("firstTimeOnMorphAiv1.1.0");
             if (firstTime !== null && firstTime == "false") {

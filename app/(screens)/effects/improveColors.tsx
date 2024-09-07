@@ -12,6 +12,7 @@ import { GlobalContext } from '@/context/contextProvider';
 import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { rewarded } from '@/ads/reward';
+import { validateAppVersion } from '@/utils/validateAppVersion';
 
 
 const ImproveColors = () => {
@@ -52,6 +53,8 @@ const ImproveColors = () => {
 
             setLoadingMessage("Initializing color improvement...");
 
+
+            await validateAppVersion();
 
 
             if (allowAds && rewarded.loaded) {
@@ -138,7 +141,7 @@ const ImproveColors = () => {
                             showDropdown && <View className={`bg-outline z-50 rounded-md absolute top-full w-full`}>
                                 <Pressable onPress={() => {
                                     setMode("indoor");
-                                    setTransformedImageUrl("");
+                                    transformedImageUrl && setTransformedImageUrl("");
                                     setShowDropdown(false);
                                 }}>
                                     <Text style={{
@@ -147,7 +150,7 @@ const ImproveColors = () => {
                                 </Pressable>
                                 <Pressable onPress={() => {
                                     setMode("outdoor");
-                                    setTransformedImageUrl("");
+                                    transformedImageUrl && setTransformedImageUrl("");
                                     setShowDropdown(false);
                                 }}>
                                     <Text style={{
@@ -161,8 +164,9 @@ const ImproveColors = () => {
                     <View className='flex-row justify-between h-[50px] overflow-hidden rounded-md bg-backgroundContainer items-center max-w-40 w-[48%]'>
                         <TextInput
                             onChangeText={(e) => {
-                                setTransformedImageUrl("");
+                                transformedImageUrl && setTransformedImageUrl("");
                                 let num = Number(e);
+                                if (Number.isNaN(num)) { return; }
                                 if (num > 100) {
                                     setBlend("100")
                                 }
