@@ -13,6 +13,10 @@ import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { GlobalContext } from '@/context/contextProvider';
 import Checkbox from 'expo-checkbox';
 import { validateAppVersion } from '@/utils/validateAppVersion';
+import ActionButtons from '@/components/common/actionButtons';
+import CustomCheckBox from '@/components/common/customCheckBox';
+import PromptComponent from '@/components/common/promptComponent';
+import EffectImagePreview from '@/components/common/effectImagePreview';
 
 
 const GenerativeReplace = () => {
@@ -21,7 +25,7 @@ const GenerativeReplace = () => {
     const [preserveGeometry, setPreserveGeometry] = useState(false);
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
-    const [transformedImageUrl, setTransformedImageUrl] = useState("");
+    const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>("");
     const [loadingMessage, setLoadingMessage] = useState("");
     const [buttonText, setButtonText] = useState("Replace");
     const { allowAds } = useContext(GlobalContext);
@@ -78,126 +82,70 @@ const GenerativeReplace = () => {
     return (
         <View className='bg-background h-full px-[10px]'>
             <ScrollView>
-                <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Generative Replace</Text>
-
-                <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] relative items-center rounded-[10px] justify-center'>
-                    <Image
-                        onLoadStart={() => setLoadingMessage("Generative Replace in progress...")}
-                        onLoad={() => {
-                            setLoadingMessage("");
-                            transformedImageUrl ? setButtonText("Save") : setButtonText("Replace")
-                        }}
-                        onError={() => {
-                            setLoadingMessage("")
-                            Alert.alert("Error", "something went wrong while loading images. try again later");
-                            setTransformedImageUrl("");
-                            setButtonText("Replace")
-                        }}
-                        resizeMode={"contain"}
-                        className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
-                        source={transformedImageUrl
-                            ? { uri: transformedImageUrl }
-                            : img?.uri
-                                ? { uri: img.uri }
-                                : require("@/assets/images/transparent.png")}
-                    />
-
-                    <View className={`items-center absolute top-1/3 left-1/3 z-0 gap-y-2 ${(img || transformedImageUrl) ? "hidden" : ""}`}>
-                        <Svg width="32" height="41" viewBox="0 0 32 41" fill="">
-                            <Path d="M20 0.5H4C1.8 0.5 0 2.3 0 4.5V36.5C0 38.7 1.8 40.5 4 40.5H28C30.2 40.5 32 38.7 32 36.5V12.5L20 0.5ZM6 32.5L11 25.834L14 29.834L19 23.168L26 32.5H6ZM18 14.5V3.5L29 14.5H18Z" fill="#e5e7eb" />
-                        </Svg>
-                        <Text style={{ fontFamily: "Outfit-Medium" }} className='text-gray-200 text-xl'>Select Image</Text>
-                    </View>
-
-
-                    <LoadingWithMessage message={loadingMessage} />
-                </TouchableOpacity>
+                <EffectImagePreview
+                    getPicture={getPicture}
+                    effectTitle={"Generative Remove"}
+                    image={img}
+                    setButtonText={setButtonText}
+                    loadingMessage={loadingMessage}
+                    setLoadingMessage={setLoadingMessage}
+                    transformedImageUrl={transformedImageUrl}
+                    setTransformedImageUrl={setTransformedImageUrl}
+                />
 
 
                 {/* prompt Area */}
-                <View className='flex-row mt-8 justify-between items-center'>
-                    <TextInput
-                        onChangeText={(e) => {
+                <View className='flex-row justify-between items-center'>
+
+                    <PromptComponent
+                        onPromptChange={(e) => {
                             setFrom(e);
                             transformedImageUrl && setTransformedImageUrl("");
                         }}
-                        value={from}
-                        placeholder='From'
-                        className=' h-12 w-[45%] px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline'
-                        placeholderTextColor={"#65558F"}
+                        promptValue={from}
+                        placeholder={"From"}
+                        style='w-[48%]'
                     />
-                    <TextInput
-                        onChangeText={(e) => {
+                    <PromptComponent
+                        onPromptChange={(e) => {
                             setTo(e);
                             transformedImageUrl && setTransformedImageUrl("");
                         }}
-                        value={to}
-                        placeholder='To'
-                        className='h-12 w-[45%] px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline'
-                        placeholderTextColor={"#65558F"}
+                        promptValue={to}
+                        placeholder={"To"}
+                        style='w-[48%]'
                     />
 
                 </View>
 
-                {/* size of the image. width and height */}
+
                 <View className='flex-row justify-between items-center mt-4'>
 
-                    <TouchableOpacity
-                        onPress={() => {
+                    <CustomCheckBox
+                        checked={detectMultiple}
+                        onChecked={() => {
                             setDetectMultiple(prev => !prev)
                             transformedImageUrl && setTransformedImageUrl("");
                         }}
-                        activeOpacity={1}
-                        className='flex-row py-1.5 items-center'
-                    >
-                        <Checkbox
-                            value={detectMultiple}
-                            onValueChange={() => {
-                                setDetectMultiple(prev => !prev)
-                                transformedImageUrl && setTransformedImageUrl("");
-                            }}
-                            color={detectMultiple ? "#326AFD" : "white"}
-                        />
-                        <Text className='text-text ml-2'>Detect multiple</Text>
-
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        onPress={() => {
+                        label={"Detect Multiple"}
+                    />
+                    <CustomCheckBox
+                        checked={preserveGeometry}
+                        onChecked={() => {
                             setPreserveGeometry(prev => !prev)
                             transformedImageUrl && setTransformedImageUrl("");
                         }}
-                        activeOpacity={1}
-                        className='flex-row py-1.5 items-center'
-                    >
-                        <Checkbox
-                            value={preserveGeometry}
-                            onValueChange={() => {
-                                setPreserveGeometry(prev => !prev)
-                                transformedImageUrl && setTransformedImageUrl("");
-                            }}
-                            color={preserveGeometry ? "#326AFD" : "white"}
-                        />
-                        <Text className='text-text ml-2'>Preserve Geometry</Text>
-                    </TouchableOpacity>
+                        label={"Preserve Geometry"}
+                    />
 
                 </View>
 
                 {/* buttons */}
-                <View className='flex-row justify-between items-center mt-4'>
-                    <Link href={".."} asChild>
-                        <TouchableOpacity activeOpacity={0.5} className='border-2 border-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                            <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>Cancel</Text>
-                        </TouchableOpacity>
-                    </Link>
-                    <TouchableOpacity onPress={handleTransformation} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                        {
-                            loadingMessage ?
-                                <ActivityIndicator size="small" color="white" /> :
-                                <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{buttonText}</Text>
-                        }
-                    </TouchableOpacity>
-                </View>
+                <ActionButtons
+                    mainButtonAction={handleTransformation}
+                    mainButtonText={buttonText}
+                    loading={loadingMessage.length > 1}
+                />
 
             </ScrollView>
 
