@@ -6,7 +6,7 @@ import { Image } from 'react-native';
 import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
-import LoadingWithMessage from '@/components/loadingWithMessage';
+import LoadingWithMessage from '@/components/common/loadingWithMessage';
 import { imageUpscale } from '@/utils/effects/imageUpscale';
 import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
@@ -141,7 +141,7 @@ const ImageUpscale = () => {
 
 
             {/* Ad here  */}
-            {allowAds && <BannerAdComponent size={BannerAdSize.LEADERBOARD} />}
+            <BannerAdComponent />
         </View>
     )
 }

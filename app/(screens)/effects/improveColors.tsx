@@ -5,7 +5,7 @@ import { Link } from 'expo-router'
 import { Image } from 'react-native';
 import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
-import LoadingWithMessage from '@/components/loadingWithMessage';
+import LoadingWithMessage from '@/components/common/loadingWithMessage';
 import { downloadImage } from '@/utils/downloadFile';
 import { generalTransformation } from '@/utils/effects/generalTransformation';
 import { GlobalContext } from '@/context/contextProvider';
@@ -212,7 +212,7 @@ const ImproveColors = () => {
 
 
             {/* Ad here  */}
-            {allowAds && <BannerAdComponent size={BannerAdSize.LEADERBOARD} />}
+            <BannerAdComponent />
         </View>
     )
 }

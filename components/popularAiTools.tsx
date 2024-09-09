@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from 'react-native'
-import ToolCard from './toolCard'
+import ToolCard from './common/toolCard'
 import { Link } from 'expo-router'
 const PopularAiTools = () => {
     return (

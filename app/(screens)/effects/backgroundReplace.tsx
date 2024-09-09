@@ -6,13 +6,14 @@ import { Image } from 'react-native';
 import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
-import LoadingWithMessage from '@/components/loadingWithMessage';
+import LoadingWithMessage from '@/components/common/loadingWithMessage';
 import { replaceBackground } from '@/utils/effects/replaceBackground';
 import { rewarded } from '@/ads/reward';
 import { BannerAdSize, RewardedAdEventType } from 'react-native-google-mobile-ads';
 import BannerAdComponent from '@/ads/banner';
 import { GlobalContext } from '@/context/contextProvider';
 import { validateAppVersion } from '@/utils/validateAppVersion';
+import ActionButtons from '@/components/common/actionButtons';
 // import { requestReview } from '@/utils/requestReview';
 
 
@@ -170,7 +171,7 @@ const backgroundReplace = () => {
 
 
                 {/* buttons */}
-                <View className='flex-row justify-between items-center mt-4'>
+                {/* <View className='flex-row justify-between items-center mt-4'>
                     <Link href={".."} asChild>
                         <TouchableOpacity activeOpacity={0.5} className='border-2 border-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
                             <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>Cancel</Text>
@@ -183,12 +184,17 @@ const backgroundReplace = () => {
                                 <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{buttonText}</Text>
                         }
                     </TouchableOpacity>
-                </View>
+                </View> */}
+                <ActionButtons
+                    mainButtonAction={handleTransformation}
+                    mainButtonText={buttonText}
+                    loading={loadingMessage ? true : false}
+                />
 
             </ScrollView>
 
 
-            {allowAds && <BannerAdComponent size={BannerAdSize.LEADERBOARD} />}
+            <BannerAdComponent />
         </View>
     )
 }

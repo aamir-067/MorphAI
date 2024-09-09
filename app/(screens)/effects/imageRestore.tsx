@@ -7,7 +7,7 @@ import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
 import { imageRestore } from '@/utils/effects/imageRestore';
-import LoadingWithMessage from '@/components/loadingWithMessage';
+import LoadingWithMessage from '@/components/common/loadingWithMessage';
 import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { GlobalContext } from '@/context/contextProvider';
@@ -138,7 +138,7 @@ const ImageRestore = () => {
 
 
             {/* Ad here  */}
-            {allowAds && <BannerAdComponent size={BannerAdSize.LEADERBOARD} />}
+            <BannerAdComponent />
         </View>
     )
 }
