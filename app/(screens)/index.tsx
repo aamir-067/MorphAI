@@ -44,6 +44,11 @@ export default function Index() {
 
                 {/* Newly Added */}
                 <NewAddedTools />
+
+                {/* Popular AI tools */}
+                <PopularAiTools />
+
+
                 {/* background Edit Tools */}
                 <BackgroundEditTools />
 
@@ -51,15 +56,14 @@ export default function Index() {
                 <ImageEnhanceTools />
 
 
-                {/* Popular AI tools */}
-                <PopularAiTools />
+
 
 
                 {/* to keep some distance from bottom */}
                 <View className="h-8"></View>
 
             </ScrollView >
-            {allowAds && <BannerAdComponent size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} />}
+            <BannerAdComponent />
         </View >
     );
 }

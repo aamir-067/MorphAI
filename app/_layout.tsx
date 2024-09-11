@@ -1,5 +1,5 @@
 import { router, Stack } from "expo-router";
-import { Alert, StatusBar } from "react-native"
+import { Alert, BackHandler, StatusBar } from "react-native"
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from "react";
@@ -24,7 +24,13 @@ export default function RootLayout() {
                 if (res.isConnected && res.isInternetReachable) {
                     SplashScreen.hideAsync();
                 } else {
-                    Alert.alert("Network Error", "Please connect to internet");
+                    Alert.alert("Network Error", "Please connect to internet", [
+                        {
+                            text: "exit", onPress: () => {
+                                BackHandler.exitApp();
+                            }
+                        }
+                    ]);
                 }
             }
         })()

@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert, ActivityIndicator } from 'react-native'
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
 import { Image } from 'react-native';
@@ -17,6 +17,7 @@ import ActionButtons from '@/components/common/actionButtons';
 import CustomCheckBox from '@/components/common/customCheckBox';
 import PromptComponent from '@/components/common/promptComponent';
 import EffectImagePreview from '@/components/common/effectImagePreview';
+import { rewarded } from '@/ads/reward';
 
 
 const GenerativeReplace = () => {
@@ -64,6 +65,13 @@ const GenerativeReplace = () => {
 
 
             await validateAppVersion();
+
+
+            if (allowAds && rewarded.loaded) {
+                rewarded.show()
+            }
+
+
             const transformedUrl = await generativeReplace({ image: img, from, to, preserveShape: preserveGeometry, replaceAllInstances: detectMultiple });
             if (transformedUrl) {
                 setTransformedImageUrl(transformedUrl);
@@ -77,6 +85,10 @@ const GenerativeReplace = () => {
             setLoadingMessage("");
         }
     }
+
+    useEffect(() => {
+        rewarded.load();
+    }, [img]);
 
 
     return (

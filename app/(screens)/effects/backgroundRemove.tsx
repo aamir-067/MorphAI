@@ -156,7 +156,7 @@ const backgroundRemove = () => {
 
 
             {/* Ad here  */}
-            {allowAds && <BannerAdComponent size={BannerAdSize.INLINE_ADAPTIVE_BANNER} />}
+            <BannerAdComponent />
         </View>
     )
 }

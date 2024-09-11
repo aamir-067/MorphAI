@@ -13,6 +13,9 @@ import BannerAdComponent from '@/ads/banner';
 import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { rewarded } from '@/ads/reward';
 import { validateAppVersion } from '@/utils/validateAppVersion';
+import EffectImagePreview from '@/components/common/effectImagePreview';
+import PromptComponent from '@/components/common/promptComponent';
+import ActionButtons from '@/components/common/actionButtons';
 
 
 const ImproveColors = () => {
@@ -22,7 +25,7 @@ const ImproveColors = () => {
     const [blend, setBlend] = useState("");
     const [loadingMessage, setLoadingMessage] = useState("");
     const [buttonText, setButtonText] = useState("Improve");
-    const [transformedImageUrl, setTransformedImageUrl] = useState("");
+    const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>("");
     const { allowAds } = useContext(GlobalContext);
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
@@ -79,6 +82,22 @@ const ImproveColors = () => {
         }
     }
 
+
+    const onBlendChange = (e: string) => {
+        transformedImageUrl && setTransformedImageUrl("");
+        let num = Number(e);
+        if (Number.isNaN(num)) { return; }
+        if (num > 100) {
+            setBlend("100")
+        }
+        else if (num < 0) {
+            setBlend("0")
+        }
+        else {
+            setBlend(num + "")
+        }
+    }
+
     // ad setup
     useEffect(() => {
         rewarded.load();
@@ -88,46 +107,57 @@ const ImproveColors = () => {
     return (
         <View className='bg-background h-full px-[10px]'>
             <ScrollView>
-                <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Improve Image Colors</Text>
+                {/* <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Improve Image Colors</Text> */}
 
                 {
-                    <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] relative items-center rounded-[10px] justify-center'>
+                    // <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] relative items-center rounded-[10px] justify-center'>
 
-                        <Image
-                            onLoadStart={() => setLoadingMessage("Color improvement in progress...")}
-                            onLoad={() => {
-                                setLoadingMessage("");
-                                transformedImageUrl ? setButtonText("Save") : setButtonText("Improve")
-                            }}
-                            onError={() => {
-                                setLoadingMessage("")
-                                Alert.alert("Error", "something went wrong while loading images. try again later");
-                                setTransformedImageUrl("");
-                                setButtonText("Improve")
-                            }}
-                            resizeMode={"contain"}
-                            className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
-                            source={transformedImageUrl
-                                ? { uri: transformedImageUrl }
-                                : img?.uri
-                                    ? { uri: img.uri }
-                                    : require("@/assets/images/transparent.png")}
-                        />
+                    //     <Image
+                    //         onLoadStart={() => setLoadingMessage("Color improvement in progress...")}
+                    //         onLoad={() => {
+                    //             setLoadingMessage("");
+                    //             transformedImageUrl ? setButtonText("Save") : setButtonText("Improve")
+                    //         }}
+                    //         onError={() => {
+                    //             setLoadingMessage("")
+                    //             Alert.alert("Error", "something went wrong while loading images. try again later");
+                    //             setTransformedImageUrl("");
+                    //             setButtonText("Improve")
+                    //         }}
+                    //         resizeMode={"contain"}
+                    //         className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
+                    //         source={transformedImageUrl
+                    //             ? { uri: transformedImageUrl }
+                    //             : img?.uri
+                    //                 ? { uri: img.uri }
+                    //                 : require("@/assets/images/transparent.png")}
+                    //     />
 
-                        <View className={`items-center absolute top-1/3 left-1/3 z-0 gap-y-2 ${(img || transformedImageUrl) ? "hidden" : ""}`}>
-                            <Svg width="32" height="41" viewBox="0 0 32 41" fill="">
-                                <Path d="M20 0.5H4C1.8 0.5 0 2.3 0 4.5V36.5C0 38.7 1.8 40.5 4 40.5H28C30.2 40.5 32 38.7 32 36.5V12.5L20 0.5ZM6 32.5L11 25.834L14 29.834L19 23.168L26 32.5H6ZM18 14.5V3.5L29 14.5H18Z" fill="#e5e7eb" />
-                            </Svg>
-                            <Text style={{ fontFamily: "Outfit-Medium" }} className='text-gray-200 text-xl'>Select Image</Text>
-                        </View>
+                    //     <View className={`items-center absolute top-1/3 left-1/3 z-0 gap-y-2 ${(img || transformedImageUrl) ? "hidden" : ""}`}>
+                    //         <Svg width="32" height="41" viewBox="0 0 32 41" fill="">
+                    //             <Path d="M20 0.5H4C1.8 0.5 0 2.3 0 4.5V36.5C0 38.7 1.8 40.5 4 40.5H28C30.2 40.5 32 38.7 32 36.5V12.5L20 0.5ZM6 32.5L11 25.834L14 29.834L19 23.168L26 32.5H6ZM18 14.5V3.5L29 14.5H18Z" fill="#e5e7eb" />
+                    //         </Svg>
+                    //         <Text style={{ fontFamily: "Outfit-Medium" }} className='text-gray-200 text-xl'>Select Image</Text>
+                    //     </View>
 
 
-                        <LoadingWithMessage message={loadingMessage} />
-                    </TouchableOpacity>
+                    //     <LoadingWithMessage message={loadingMessage} />
+                    // </TouchableOpacity>
                 }
 
+                <EffectImagePreview
+                    getPicture={getPicture}
+                    effectTitle={"Improve Colors"}
+                    image={img}
+                    setButtonText={setButtonText}
+                    loadingMessage={loadingMessage}
+                    setLoadingMessage={setLoadingMessage}
+                    transformedImageUrl={transformedImageUrl}
+                    setTransformedImageUrl={setTransformedImageUrl}
+                />
 
-                <View className='flex-row justify-between  mt-4'>
+
+                <View className='flex-row justify-between mt-4'>
 
                     <View className='max-w-40 w-[48%]'>
                         <View className='flex-row justify-between h-[50px] overflow-hidden rounded-md bg-backgroundContainer items-center'>
@@ -168,45 +198,25 @@ const ImproveColors = () => {
 
                     <View className='flex-row justify-between h-[50px] overflow-hidden rounded-md bg-backgroundContainer items-center max-w-40 w-[48%]'>
                         <TextInput
-                            onChangeText={(e) => {
-                                transformedImageUrl && setTransformedImageUrl("");
-                                let num = Number(e);
-                                if (Number.isNaN(num)) { return; }
-                                if (num > 100) {
-                                    setBlend("100")
-                                }
-                                else if (num < 0) {
-                                    setBlend("0")
-                                }
-                                else {
-                                    setBlend(num + "")
-                                }
-                            }}
                             value={blend.toString()}
+                            onChangeText={onBlendChange}
                             keyboardType={"numeric"}
                             keyboardAppearance={"dark"}
                             placeholder='Intensity, default 70'
                             placeholderTextColor={"#65558F"}
-                            className=' px-2 h-full text-text'
+                            className='px-3 h-full text-text'
                         />
                     </View>
                 </View>
 
                 {/* buttons */}
-                <View className={`flex-row justify-between items-center pb-10 mt-5`}>
-                    <Link href={".."} asChild>
-                        <TouchableOpacity activeOpacity={0.5} className='border-2 z-0 border-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                            <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>Cancel</Text>
-                        </TouchableOpacity>
-                    </Link>
-                    <TouchableOpacity onPress={handleTransformation} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                        {
-                            loadingMessage ?
-                                <ActivityIndicator size="small" color="white" /> :
-                                <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{buttonText}</Text>
-                        }
-                    </TouchableOpacity>
-                </View>
+
+                <ActionButtons
+                    mainButtonText={buttonText}
+                    mainButtonAction={handleTransformation}
+                    loading={loadingMessage.length > 0}
+                    style='pb-10'
+                />
 
             </ScrollView>
 

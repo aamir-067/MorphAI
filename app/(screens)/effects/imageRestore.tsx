@@ -14,6 +14,7 @@ import { GlobalContext } from '@/context/contextProvider';
 import { validateAppVersion } from '@/utils/validateAppVersion';
 import ActionButtons from '@/components/common/actionButtons';
 import EffectImagePreview from '@/components/common/effectImagePreview';
+import { rewarded } from '@/ads/reward';
 // import { requestReview } from '@/utils/requestReview';
 
 
@@ -53,6 +54,12 @@ const ImageRestore = () => {
 
 
             await validateAppVersion();
+
+
+            if (allowAds && rewarded.loaded) {
+                rewarded.show()
+            }
+
             const transformedUrl = await imageRestore({ image: img });
 
             if (transformedUrl) {
@@ -74,7 +81,9 @@ const ImageRestore = () => {
         }
     }
 
-
+    useEffect(() => {
+        rewarded.load();
+    }, [img]);
 
 
 

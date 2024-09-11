@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert, ActivityIndicator } from 'react-native'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { Link } from 'expo-router'
 import { Image } from 'react-native';
@@ -17,6 +17,7 @@ import EffectImagePreview from '@/components/common/effectImagePreview';
 import PromptComponent from '@/components/common/promptComponent';
 import CustomCheckBox from '@/components/common/customCheckBox';
 import ActionButtons from '@/components/common/actionButtons';
+import { rewarded } from '@/ads/reward';
 
 
 const MagicEraser = () => {
@@ -70,6 +71,10 @@ const MagicEraser = () => {
 
             await validateAppVersion();
 
+            if (allowAds && rewarded.loaded) {
+                rewarded.show()
+            }
+
             const transformedUrl = await generativeRemove({ image: img, prompt, removeAllInstances, removeShadows });
 
             if (transformedUrl) {
@@ -85,6 +90,10 @@ const MagicEraser = () => {
             setLoadingMessage("");
         }
     }
+
+    useEffect(() => {
+        rewarded.load();
+    }, [img]);
 
 
     return (
