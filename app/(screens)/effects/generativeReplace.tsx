@@ -96,7 +96,7 @@ const GenerativeReplace = () => {
             <ScrollView>
                 <EffectImagePreview
                     getPicture={getPicture}
-                    effectTitle={"Generative Remove"}
+                    effectTitle={"Generative Replace"}
                     image={img}
                     setButtonText={setButtonText}
                     loadingMessage={loadingMessage}
