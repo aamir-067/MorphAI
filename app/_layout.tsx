@@ -24,13 +24,13 @@ export default function RootLayout() {
                 if (res.isConnected && res.isInternetReachable) {
                     SplashScreen.hideAsync();
                 } else {
-                    Alert.alert("Network Error", "Please connect to internet", [
-                        {
-                            text: "exit", onPress: () => {
-                                BackHandler.exitApp();
-                            }
-                        }
-                    ]);
+                    // Alert.alert("Network Error", "Please connect to internet", [
+                    //     {
+                    //         text: "exit", onPress: () => {
+                    //             BackHandler.exitApp();
+                    //         }
+                    //     }
+                    // ]);
                 }
             }
         })()

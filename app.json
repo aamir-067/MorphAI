@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "Morph AI",
 		"slug": "MorphAI",
-		"version": "1.1.2",
+		"version": "1.2.0",
 		"orientation": "portrait",
 		"icon": "./assets/images/icon2.png",
 		"scheme": "morph-ai",
@@ -22,7 +22,7 @@
 				"backgroundColor": "#000000"
 			},
 			"package": "com.aamir067.morphai",
-			"versionCode": 5
+			"versionCode": 6
 		},
 		"web": {
 			"bundler": "metro",

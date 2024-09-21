@@ -9,19 +9,14 @@ const NewAddedTools = () => {
             <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-2xl mb-2.5'>Newly Added</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
 
-                {/* <Link className='mr-4' href={"/effects/generativeRecolor"}>
+                <Link className='mr-4' href={"/effects/generativeRecolor"}>
                     <ToolCard title={"Generative Recolor"} img={require("@/assets/images/toolsImages/generativeRecolor.png")} />
-                </Link> */}
-
-
-                <Link className='mr-4' href={"/effects/improveColors"}>
-                    <ToolCard title={"Improve Colors"} img={require("@/assets/images/toolsImages/improveColors.jpg")} />
                 </Link>
 
 
-                {/* <Link className='mr-4' href={"/effects/generativeFill"}>
+                <Link className='mr-4' href={"/effects/generativeFill"}>
                     <ToolCard title={"Generative Fill"} img={require("@/assets/images/toolsImages/generativeFill.jpg")} />
-                </Link> */}
+                </Link>
             </ScrollView>
         </View>
     )

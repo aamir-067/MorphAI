@@ -11,6 +11,10 @@ const PopularAiTools = () => {
                     <ToolCard title={"Generative Remove"} img={require("@/assets/images/toolsImages/generativeRemove.png")} />
                 </Link>
 
+                <Link className='mr-4' href={"/effects/improveColors"}>
+                    <ToolCard title={"Improve Colors"} img={require("@/assets/images/toolsImages/improveColors.jpg")} />
+                </Link>
+
                 <Link className='' href={"/effects/generativeReplace"}> {/* add mr-4 after you add the third effect */}
                     <ToolCard title={"Generative Replace"} img={require("@/assets/images/toolsImages/generativeReplace.png")} />
                 </Link>

@@ -7,13 +7,12 @@ import { getAssetFromGallery } from '@/utils/pickAssetFromPhone';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { downloadImage } from '@/utils/downloadFile';
 import LoadingWithMessage from '@/components/common/loadingWithMessage';
-import { generativeRemove } from '@/utils/effects/generativeRemove';
 import BannerAdComponent from '@/ads/banner';
-import { BannerAdSize } from 'react-native-google-mobile-ads';
 import { GlobalContext } from '@/context/contextProvider';
 import { generalTransformation } from '@/utils/effects/generalTransformation';
 import Checkbox from "expo-checkbox";
 import { validateAppVersion } from '@/utils/validateAppVersion';
+import ColorPickerModel from '@/components/colorPickerModel';
 
 
 const GenerativeRecolor = () => {
@@ -21,6 +20,7 @@ const GenerativeRecolor = () => {
     const [prompt, setPrompt] = useState<string>("");
     const [items, setItems] = useState<string[]>([]);
     const [multiple, setMultiple] = useState(false);
+    const [colorPicked, setColorPicked] = useState<string>("#e07484");
     const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>(undefined)
     const [loadingMessage, setLoadingMessage] = useState("");
     const { allowAds } = useContext(GlobalContext);
@@ -76,7 +76,8 @@ const GenerativeRecolor = () => {
             setLoadingMessage("Initializing generative recolor...");
 
             await validateAppVersion();
-            const color = "326AFD"
+            // remove the hast from the start.
+            const color = colorPicked.slice(1);
             const promptToSend = items.length === 1 ? items.join("") : `(${items.join(";")})`;
             const transformedUrl = await generalTransformation({
                 image: img,
@@ -97,8 +98,6 @@ const GenerativeRecolor = () => {
             setLoadingMessage("");
         }
     }
-
-
 
     return (
         <View className='bg-background h-full px-[10px]'>
@@ -195,7 +194,7 @@ const GenerativeRecolor = () => {
 
                     <View className='w-1/2 h-full flex-row justify-end gap-x-3 items-center'>
                         <Text className='text-text'>Color</Text>
-                        <TouchableOpacity className='bg-green-500 h-full w-8/12 rounded-sm' />
+                        <ColorPickerModel colorPicked={colorPicked} setColorPicked={setColorPicked} />
                     </View>
                 </View>
 
@@ -211,9 +210,6 @@ const GenerativeRecolor = () => {
                     </TouchableOpacity>
                 </View>
 
-
-
-                {/* <ColorPickerModel /> */}
             </ScrollView>
 
 
