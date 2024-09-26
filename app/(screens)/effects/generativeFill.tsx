@@ -14,38 +14,44 @@ import { GlobalContext } from '@/context/contextProvider';
 import { generalTransformation } from '@/utils/effects/generalTransformation';
 import Checkbox from "expo-checkbox";
 import { validateAppVersion } from '@/utils/validateAppVersion';
+import FocusBox from '@/components/focusBox';
+import DropDown from '@/components/dropDown';
+import PromptComponent from '@/components/common/promptComponent';
+import { generativeFill } from '@/utils/effects/generativeFill';
 
+
+const dots = {
+    north_west: 0,
+    north: 1,
+    north_east: 2,
+    west: 3,
+    center: 4,
+    east: 5,
+    south_west: 6,
+    south: 7,
+    south_east: 8,
+}
 
 const GenerativeFill = () => {
     const [img, setImg] = useState<ImagePickerAsset | undefined>(undefined);
-    const [prompt, setPrompt] = useState<string>("");
-    const [items, setItems] = useState<string[]>([]);
-    const [multiple, setMultiple] = useState(false);
     const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>(undefined)
     const [loadingMessage, setLoadingMessage] = useState("");
-    const { allowAds } = useContext(GlobalContext);
+
+    // parameters
+    const [aspect, setAspect] = useState<"Square" | "Portrait" | "Landscape" | "Custom">("Square");
+    const [height, setHeight] = useState("");
+    const [width, setWidth] = useState("");
+    const [focus, setFocus] = useState<keyof typeof dots>("center");
+
+
+
 
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
         setImg(asset)
         setTransformedImageUrl(undefined)
     }
-    const handleItems = (e: string) => {
-        if (items.length === 3) {
-            setPrompt("");
-            return;
-        }
-        setPrompt(e);
-        if (e.endsWith(",") && items.length < 3) {
-            setItems(prev => [...prev, e.slice(0, -1).trim()]);
-            setPrompt("");
-        }
-    }
 
-    const removeItem = (itemIndex: number) => {
-        const newItems = items.filter((item, index) => index !== itemIndex);
-        setItems(newItems);
-    }
 
 
     const handleTransformation = async () => {
@@ -68,23 +74,36 @@ const GenerativeFill = () => {
                 return;
             }
 
-            if (items.length === 0) {
-                Alert.alert("Prompt Missing", "Select at least one item to recolor");
-                return;
-            }
 
             setLoadingMessage("Initializing generative recolor...");
 
 
             await validateAppVersion();
 
+            if (!img || !aspect || !focus) {
+                Alert.alert("Error",
+                    !img ? "Image is missing, kindly select image to transform." :
+                        "please fill the inputs"
+                );
+                return;
+            }
 
-            const color = "326AFD"
-            const promptToSend = items.length === 1 ? items.join("") : `(${items.join(";")})`;
-            const transformedUrl = await generalTransformation({
+            // if the aspect is custom then the height and width are must.
+            if (aspect === "Custom") {
+                if (!height.trim() || !width.trim()) {
+                    Alert.alert("Error", "Image dimensions are missing. Enter height and width to continue");
+                    return;
+                }
+            }
+
+
+            // console.log("generative fill", aspect, height, width, focus);
+            const transformedUrl = await generativeFill({
                 image: img,
-                effect: "gen_recolor",
-                args: `prompt_${promptToSend};to-color_${color};multiple_${multiple}`
+                aspect,
+                height,
+                width,
+                focus
             });
 
             if (transformedUrl) {
@@ -93,7 +112,7 @@ const GenerativeFill = () => {
                 Alert.alert("Error", "Please try again later");
             }
         } catch (error) {
-            // console.log(error);
+            console.log(error);
             Alert.alert("Error", "Something went wrong while processing");
         }
         finally {
@@ -101,6 +120,24 @@ const GenerativeFill = () => {
         }
     }
 
+
+
+    const handleHeight = (newDimension: string) => {
+        handleDimensionChange(newDimension, "height");
+    }
+    const handleWidth = (newDimension: string) => {
+        handleDimensionChange(newDimension, "width");
+    }
+    const handleDimensionChange = (newDimension: string, item: "height" | "width") => {
+        // make sure that the number is not greater then 2000. else only save 2000. and if its -ve then save 0.
+        if (parseInt(newDimension) > 2000) {
+            item === "height" ? setHeight("2000") : setWidth("2000");
+        } else if (parseInt(newDimension) < 0) {
+            item === "height" ? setHeight("0") : setWidth("0");
+        } else {
+            item === "height" ? setHeight(newDimension) : setWidth(newDimension);
+        }
+    }
 
 
     return (
@@ -142,51 +179,50 @@ const GenerativeFill = () => {
                 }
 
 
-                {/* prompt Area */}
-                <TextInput
-                    value={prompt}
-                    onChangeText={(e) => handleItems(e)}
-                    numberOfLines={3}
-                    placeholder={items.length === 0 ? 'Items to recolor separate my comma. (3 max)' : items.length >= 3 ? "Max items selected" : "New items"}
-                    className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline'
-                    placeholderTextColor={"#65558F"}
-                />
-
-                {/* items to recolor */}
-                <View className={`flex-row mt-2 w-full flex-wrap gap-x-2 justify-start items-center ${items.length ? "" : "hidden"}`}>
-                    {
-                        items.map((item, index) => {
-                            return (
-                                <TouchableOpacity onPress={() => removeItem(index)} key={index} className='flex-row h-6 pr-2 gap-x-2 bg-outline rounded-full justify-between items-center'>
-                                    <Text
-                                        style={{
-                                            fontFamily: "Poppins-Medium",
-                                        }}
-                                        className='text-text mr-1 mb-0.5 text-sm'
-                                    >{item.toLowerCase()}</Text>
-                                    <Image resizeMode={"contain"} className='w-2.5 aspect-square' source={require("@/assets/icons/crossIcon.png")} />
-                                </TouchableOpacity>
-                            )
-                        })
-                    }
-                </View>
 
 
-                <View className='flex-row justify-between items-center mt-4 gap-x-3'>
-                    <TouchableOpacity onPress={() => setMultiple(prev => !prev)} activeOpacity={1} className='flex-row py-1.5 items-center'>
-                        <Checkbox value={multiple} onValueChange={setMultiple} color={multiple ? "#326AFD" : "white"} />
-                        <Text className='text-text ml-2'>Recolor multiple</Text>
-                    </TouchableOpacity>
+                <View className='flex-row justify-between z-50 items-center mt-4'>
+                    <View className='w-1/2 max-w-40'>
+                        <DropDown
+                            items={["Square", "Portrait", "Landscape", "Custom"]}
+                            setCurrentItem={setAspect}
+                            currentItem={aspect}
+                        />
+                    </View>
 
-
-                    <View className='w-1/2 h-full flex-row justify-end gap-x-3 items-center'>
-                        <Text className='text-text'>Color</Text>
-                        <TouchableOpacity className='bg-green-500 h-full w-8/12 rounded-sm' />
+                    <View className='w-1/2 h-full flex-row justify-evenly gap-x-3 items-center'>
+                        <Text className='text-text mr-2'>Focus on</Text>
+                        <FocusBox
+                            selected={focus}
+                            setSelected={setFocus}
+                            dots={dots}
+                        />
                     </View>
                 </View>
 
+
+                {/* custom pixels */}
+                {aspect === "Custom" ? <View className='flex flex-row -mt-4 justify-between items-center'>
+                    <View className='w-[48%] max-w-40'>
+                        <PromptComponent
+                            promptValue={height}
+                            onPromptChange={handleHeight}
+                            placeholder={"height"}
+                            keyboardType={"numeric"}
+                        />
+                    </View>
+                    <View className='w-[48%] max-w-40'>
+                        <PromptComponent
+                            promptValue={width}
+                            onPromptChange={handleWidth}
+                            placeholder={"width"}
+                            keyboardType={"numeric"}
+                        />
+                    </View>
+                </View> : null}
+
                 {/* buttons */}
-                <View className='flex-row justify-between items-center mt-4'>
+                <View className='flex-row justify-between pb-96 items-center mt-4'>
                     <Link href={".."} asChild>
                         <TouchableOpacity activeOpacity={0.5} className='border-2 border-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
                             <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>Cancel</Text>

@@ -31,6 +31,7 @@ const GenerativeRecolor = () => {
         setTransformedImageUrl(undefined)
     }
     const handleItems = (e: string) => {
+        console.log(e);
         if (items.length === 3) {
             setPrompt("");
             return;

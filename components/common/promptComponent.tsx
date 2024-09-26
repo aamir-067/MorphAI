@@ -5,8 +5,9 @@ import React from 'react'
 
 interface Props {
     promptValue: string
-    onPromptChange: (e: string) => void
+    onPromptChange: React.Dispatch<React.SetStateAction<string>> | ((e: string) => void)
     placeholder?: string
+    maxValue?: number
     keyboardType?: "numeric" | "default"
     style?: string
 }

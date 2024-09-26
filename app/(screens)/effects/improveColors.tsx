@@ -16,6 +16,7 @@ import { validateAppVersion } from '@/utils/validateAppVersion';
 import EffectImagePreview from '@/components/common/effectImagePreview';
 import PromptComponent from '@/components/common/promptComponent';
 import ActionButtons from '@/components/common/actionButtons';
+import DropDown from '@/components/dropDown';
 
 
 const ImproveColors = () => {
@@ -159,7 +160,7 @@ const ImproveColors = () => {
 
                 <View className='flex-row justify-between mt-4'>
 
-                    <View className='max-w-40 w-[48%]'>
+                    {/* <View className='max-w-40 w-[48%]'>
                         <View className='flex-row justify-between h-[50px] overflow-hidden rounded-md bg-backgroundContainer items-center'>
                             <TextInput readOnly={true} value={mode} placeholder='Select Environment' placeholderTextColor={"#65558F"} className='capitalize px-2 w-9/12 h-full text-text' />
                             <TouchableOpacity onPress={() => setShowDropdown(!showDropdown)} activeOpacity={0.5} className='h-full bg-buttonBackground aspect-square items-center justify-center'>
@@ -194,6 +195,14 @@ const ImproveColors = () => {
                                 </Pressable>
                             </View>
                         }
+                    </View> */}
+
+                    <View className='max-w-40 w-[48%]'>
+                        <DropDown
+                            items={["indoor", "outdoor"]}
+                            setCurrentItem={setMode}
+                            currentItem={mode}
+                        />
                     </View>
 
                     <View className='flex-row justify-between h-[50px] overflow-hidden rounded-md bg-backgroundContainer items-center max-w-40 w-[48%]'>
