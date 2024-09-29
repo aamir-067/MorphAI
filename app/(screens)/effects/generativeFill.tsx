@@ -20,7 +20,7 @@ import PromptComponent from '@/components/common/promptComponent';
 import { generativeFill } from '@/utils/effects/generativeFill';
 
 
-const dots = {
+export const dots = {
     north_west: 0,
     north: 1,
     north_east: 2,

@@ -48,9 +48,9 @@ export const generativeFill = async ({
 			`${server}/api/v1/effects/generative-fill`,
 			{
 				method: "POST",
-				// headers: {
-				// 	"Content-Type": "multipart/form-data",
-				// },
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
 				body: formData,
 			}
 		);

@@ -73,52 +73,52 @@ ExpoConstants.systemVersion;
 // 	} catch (error) {}
 // };
 
-export const validateAppVersion = async () => {
-	// Alert.alert("Warning", `Kindly update the application from play store.`, [
-	// 	{
-	// 		text: "exit",
-	// 		style: "destructive",
-	// 		onPress: () => {
-	// 			BackHandler.exitApp();
-	// 		},
-	// 	},
-	// 	{
-	// 		text: "update",
-	// 		onPress: async () => {
-	// 			try {
-	// 				// android
-	// 				if (
-	// 					await Linking.canOpenURL(
-	// 						`market://details?id=${androidPackageName}`
-	// 					)
-	// 				) {
-	// 					Linking.openURL(
-	// 						`market://details?id=${androidPackageName}`
-	// 					);
-	// 				} else {
-	// 					BackHandler.exitApp();
-	// 				}
-	// 				//? for ios
-	// 				// if (
-	// 				// 	await Linking.canOpenURL(
-	// 				// 		`itms-apps://itunes.apple.com/app/viewContentsUserReviews/id${itunesItemId}`
-	// 				// 	)
-	// 				// ) {
-	// 				// 	Linking.canOpenURL(
-	// 				// 		`itms-apps://itunes.apple.com/app/viewContentsUserReviews/id${itunesItemId}`
-	// 				// 	);
-	// 				// } else {
-	// 				// 	BackHandler.exitApp();
-	// 				// }
-	// 			} catch (error) {
-	// 				BackHandler.exitApp();
-	// 			}
-	// 		},
-	// 	},
-	// ]);
-};
+// export const validateAppVersion = async () => {
+// 	// Alert.alert("Warning", `Kindly update the application from play store.`, [
+// 	// 	{
+// 	// 		text: "exit",
+// 	// 		style: "destructive",
+// 	// 		onPress: () => {
+// 	// 			BackHandler.exitApp();
+// 	// 		},
+// 	// 	},
+// 	// 	{
+// 	// 		text: "update",
+// 	// 		onPress: async () => {
+// 	// 			try {
+// 	// 				// android
+// 	// 				if (
+// 	// 					await Linking.canOpenURL(
+// 	// 						`market://details?id=${androidPackageName}`
+// 	// 					)
+// 	// 				) {
+// 	// 					Linking.openURL(
+// 	// 						`market://details?id=${androidPackageName}`
+// 	// 					);
+// 	// 				} else {
+// 	// 					BackHandler.exitApp();
+// 	// 				}
+// 	// 				//? for ios
+// 	// 				// if (
+// 	// 				// 	await Linking.canOpenURL(
+// 	// 				// 		`itms-apps://itunes.apple.com/app/viewContentsUserReviews/id${itunesItemId}`
+// 	// 				// 	)
+// 	// 				// ) {
+// 	// 				// 	Linking.canOpenURL(
+// 	// 				// 		`itms-apps://itunes.apple.com/app/viewContentsUserReviews/id${itunesItemId}`
+// 	// 				// 	);
+// 	// 				// } else {
+// 	// 				// 	BackHandler.exitApp();
+// 	// 				// }
+// 	// 			} catch (error) {
+// 	// 				BackHandler.exitApp();
+// 	// 			}
+// 	// 		},
+// 	// 	},
+// 	// ]);
+// };
 
-export const validateAppVersion2 = async () => {
+export const validateAppVersion = async () => {
 	try {
 		// check if the app is outdated or not.
 		let latestAppVersion = currentAppVersion.split(".").join("");
@@ -132,6 +132,7 @@ export const validateAppVersion2 = async () => {
 			latestAppVersion = data.data.version.split(".").join("");
 		}
 
+		console.log(latestAppVersion, currentVersion);
 		if (Number(latestAppVersion) > Number(currentVersion)) {
 			Alert.alert(
 				"Warning",
