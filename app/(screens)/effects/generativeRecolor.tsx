@@ -13,6 +13,7 @@ import { generalTransformation } from '@/utils/effects/generalTransformation';
 import Checkbox from "expo-checkbox";
 import { validateAppVersion } from '@/utils/validateAppVersion';
 import ColorPickerModel from '@/components/colorPickerModel';
+import { rewarded } from '@/ads/reward';
 
 
 const GenerativeRecolor = () => {
@@ -80,6 +81,13 @@ const GenerativeRecolor = () => {
             // remove the hast from the start.
             const color = colorPicked.slice(1);
             const promptToSend = items.length === 1 ? items.join("") : `(${items.join(";")})`;
+
+
+            if (allowAds && rewarded.loaded) {
+                rewarded.show();
+            }
+
+
             const transformedUrl = await generalTransformation({
                 image: img,
                 effect: "gen_recolor",
@@ -99,6 +107,11 @@ const GenerativeRecolor = () => {
             setLoadingMessage("");
         }
     }
+
+
+    useEffect(() => {
+        rewarded.load();
+    }, [img]);
 
     return (
         <View className='bg-background h-full px-[10px]'>

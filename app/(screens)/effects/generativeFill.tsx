@@ -18,7 +18,8 @@ import FocusBox from '@/components/focusBox';
 import DropDown from '@/components/dropDown';
 import PromptComponent from '@/components/common/promptComponent';
 import { generativeFill } from '@/utils/effects/generativeFill';
-
+import { rewarded } from '@/ads/reward';
+import EffectImagePreview from '@/components/common/effectImagePreview';
 
 export const dots = {
     north_west: 0,
@@ -36,6 +37,8 @@ const GenerativeFill = () => {
     const [img, setImg] = useState<ImagePickerAsset | undefined>(undefined);
     const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>(undefined)
     const [loadingMessage, setLoadingMessage] = useState("");
+    const { allowAds } = useContext(GlobalContext);
+    const [buttonText, setButtonText] = useState("Fill");
 
     // parameters
     const [aspect, setAspect] = useState<"Square" | "Portrait" | "Landscape" | "Custom">("Square");
@@ -97,6 +100,10 @@ const GenerativeFill = () => {
             }
 
 
+            if (allowAds && rewarded.loaded) {
+                rewarded.show();
+            }
+
             // console.log("generative fill", aspect, height, width, focus);
             const transformedUrl = await generativeFill({
                 image: img,
@@ -140,9 +147,29 @@ const GenerativeFill = () => {
     }
 
 
+    useEffect(() => {
+        rewarded.load();
+    }, [img]);
+
+
     return (
         <View className='bg-background h-full px-[10px]'>
             <ScrollView>
+
+
+                <EffectImagePreview
+                    getPicture={getPicture}
+                    effectTitle={"Generative Fill"}
+                    image={img}
+                    setButtonText={setButtonText}
+                    loadingMessage={loadingMessage}
+                    setLoadingMessage={setLoadingMessage}
+                    transformedImageUrl={transformedImageUrl}
+                    setTransformedImageUrl={setTransformedImageUrl}
+
+                />
+
+
                 <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Generative Fill</Text>
 
                 {

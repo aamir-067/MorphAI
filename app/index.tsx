@@ -10,14 +10,14 @@ export default function Index() {
         (async () => {
             await validateAppVersion();
             // await AsyncStorage.removeItem("firstTimeOnMorphAiv1.1.0");
-            const firstTime = await AsyncStorage.getItem("firstTimeOnMorphAiv1.1.0");
+            const firstTime = await AsyncStorage.getItem("firstTimeOnMorphAi");
             if (firstTime !== null && firstTime == "false") {
                 setTimeout(() => {
                     router.replace("/(screens)");
                     setLoading(false);
                 }, 0);
             } else {
-                await AsyncStorage.setItem("firstTimeOnMorphAiv1.1.0", "false");
+                await AsyncStorage.setItem("firstTimeOnMorphAi", "false");
                 setLoading(false);
             }
         })()

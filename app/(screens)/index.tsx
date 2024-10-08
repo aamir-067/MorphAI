@@ -11,7 +11,6 @@ import { useContext, useEffect } from "react";
 import { GlobalContext } from "@/context/contextProvider";
 import { validateAppVersion } from "@/utils/validateAppVersion";
 export default function Index() {
-    const { allowAds } = useContext(GlobalContext);
 
     useEffect(() => {
         validateAppVersion();
