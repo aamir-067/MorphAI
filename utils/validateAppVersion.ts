@@ -132,7 +132,6 @@ export const validateAppVersion = async () => {
 			latestAppVersion = data.data.version.split(".").join("");
 		}
 
-		console.log(latestAppVersion, currentVersion);
 		if (Number(latestAppVersion) > Number(currentVersion)) {
 			Alert.alert(
 				"Warning",
