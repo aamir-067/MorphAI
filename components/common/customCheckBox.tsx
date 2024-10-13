@@ -6,13 +6,14 @@ interface Props {
     onChecked: () => void
     checked: boolean
     label: string
+    style?: string
 }
-const CustomCheckBox = ({ onChecked, checked, label }: Props) => {
+const CustomCheckBox = ({ onChecked, checked, label, style }: Props) => {
     return (
         <TouchableOpacity
             onPress={onChecked}
             activeOpacity={1}
-            className='flex-row py-1.5 items-center'
+            className={'flex-row py-1.5 items-center' + style}
         >
             <Checkbox
                 value={checked}

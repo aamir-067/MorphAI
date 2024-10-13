@@ -150,6 +150,7 @@ const ImproveColors = () => {
                     getPicture={getPicture}
                     effectTitle={"Improve Colors"}
                     image={img}
+                    originalButtonText={"Improve"}
                     setButtonText={setButtonText}
                     loadingMessage={loadingMessage}
                     setLoadingMessage={setLoadingMessage}

@@ -104,6 +104,7 @@ const MagicEraser = () => {
                     getPicture={getPicture}
                     effectTitle={"Generative Remove"}
                     image={img}
+                    originalButtonText='Remove'
                     setButtonText={setButtonText}
                     loadingMessage={loadingMessage}
                     setLoadingMessage={setLoadingMessage}
@@ -115,7 +116,7 @@ const MagicEraser = () => {
                 {/* prompt Area */}
                 <PromptComponent
                     promptValue={prompt}
-                    onPromptChange={(e) => {
+                    onPromptChange={(e: string) => {
                         setPrompt(e)
                         transformedImageUrl && setTransformedImageUrl("");
                     }}

@@ -14,6 +14,10 @@ import Checkbox from "expo-checkbox";
 import { validateAppVersion } from '@/utils/validateAppVersion';
 import ColorPickerModel from '@/components/colorPickerModel';
 import { rewarded } from '@/ads/reward';
+import EffectImagePreview from '@/components/common/effectImagePreview';
+import PromptComponent from '@/components/common/promptComponent';
+import CustomCheckBox from '@/components/common/customCheckBox';
+import ActionButtons from '@/components/common/actionButtons';
 
 
 const GenerativeRecolor = () => {
@@ -25,7 +29,7 @@ const GenerativeRecolor = () => {
     const [transformedImageUrl, setTransformedImageUrl] = useState<string | undefined>(undefined)
     const [loadingMessage, setLoadingMessage] = useState("");
     const { allowAds } = useContext(GlobalContext);
-
+    const [buttonText, setButtonText] = useState("Recolor");
     const getPicture = async () => {
         const asset = await getAssetFromGallery({ fileType: "image" });
         setImg(asset)
@@ -70,7 +74,7 @@ const GenerativeRecolor = () => {
                 return;
             }
 
-            if (items.length === 0) {
+            if (items.length === 0 && prompt.trim().length === 0) {
                 Alert.alert("Prompt Missing", "Select at least one item to recolor");
                 return;
             }
@@ -80,7 +84,13 @@ const GenerativeRecolor = () => {
             await validateAppVersion();
             // remove the hast from the start.
             const color = colorPicked.slice(1);
-            const promptToSend = items.length === 1 ? items.join("") : `(${items.join(";")})`;
+            let promptToSend;
+
+            if (items.length == 0) {
+                promptToSend = `(${prompt})`;
+            } else {
+                promptToSend = items.length === 1 ? items.join("") : `(${items.join(";")})`;
+            }
 
 
             if (allowAds && rewarded.loaded) {
@@ -116,53 +126,27 @@ const GenerativeRecolor = () => {
     return (
         <View className='bg-background h-full px-[10px]'>
             <ScrollView>
-                <Text style={{ fontFamily: "Outfit-Medium" }} className='text-text text-3xl my-7'>Generative Recolor</Text>
+                <EffectImagePreview
+                    getPicture={getPicture}
+                    effectTitle={"Generative Recolor"}
+                    image={img}
+                    originalButtonText='Recolor'
+                    setButtonText={setButtonText}
+                    loadingMessage={loadingMessage}
+                    setLoadingMessage={setLoadingMessage}
+                    transformedImageUrl={transformedImageUrl}
+                    setTransformedImageUrl={setTransformedImageUrl}
 
-                {
+                />
 
-                    <TouchableOpacity onPress={getPicture} activeOpacity={0.5} className='bg-[#1D1B20] h-[280px] relative items-center rounded-[10px] justify-center'>
-
-                        <Image
-                            onLoadStart={() => setLoadingMessage("Generative recolor in progress...")}
-                            onLoad={() => setLoadingMessage("")}
-                            onError={() => {
-                                setLoadingMessage("")
-                                Alert.alert("Error", "something went wrong while loading images. try again later");
-                                setTransformedImageUrl(undefined)
-                            }}
-                            resizeMode={"contain"}
-                            className={`w-full absolute top-0 left-0 h-full ${loadingMessage ? "opacity-0" : "opacity-100"}`}
-                            source={transformedImageUrl
-                                ? { uri: transformedImageUrl }
-                                : img?.uri
-                                    ? { uri: img.uri }
-                                    : require("@/assets/images/transparent.png")}
-                        />
-
-                        <View className={`items-center absolute top-1/3 left-1/3 z-0 gap-y-2 ${(img || transformedImageUrl) ? "hidden" : ""}`}>
-                            <Svg width="32" height="41" viewBox="0 0 32 41" fill="">
-                                <Path d="M20 0.5H4C1.8 0.5 0 2.3 0 4.5V36.5C0 38.7 1.8 40.5 4 40.5H28C30.2 40.5 32 38.7 32 36.5V12.5L20 0.5ZM6 32.5L11 25.834L14 29.834L19 23.168L26 32.5H6ZM18 14.5V3.5L29 14.5H18Z" fill="#e5e7eb" />
-                            </Svg>
-                            <Text style={{ fontFamily: "Outfit-Medium" }} className='text-gray-200 text-xl'>Select Image</Text>
-                        </View>
-
-
-                        <LoadingWithMessage message={loadingMessage} />
-                    </TouchableOpacity>
-                }
-
-
-                {/* prompt Area */}
-                <TextInput
-                    value={prompt}
-                    onChangeText={(e) => {
+                <PromptComponent
+                    promptValue={prompt}
+                    style='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline'
+                    onPromptChange={(e: string) => {
                         handleItems(e)
                         setTransformedImageUrl("");
                     }}
-                    numberOfLines={3}
                     placeholder={items.length === 0 ? 'Items to recolor separate my comma. (3 max)' : items.length >= 3 ? "Max items selected" : "New items"}
-                    className='mt-8 h-12 px-2 bg-backgroundContainer text-gray-200 focus:border-2 rounded-md focus:border-outline'
-                    placeholderTextColor={"#65558F"}
                 />
 
                 {/* items to recolor */}
@@ -186,24 +170,17 @@ const GenerativeRecolor = () => {
 
 
                 <View className='flex-row justify-between items-center mt-4 gap-x-3'>
-                    <TouchableOpacity
-                        onPress={() => {
-                            setMultiple(prev => !prev);
-                            setTransformedImageUrl("");
-                        }}
-                        activeOpacity={1}
-                        className='flex-row py-1.5 items-center'
-                    >
-                        <Checkbox
-                            value={multiple}
-                            onValueChange={() => {
-                                setMultiple(prev => !prev);
-                                setTransformedImageUrl("");
+                    <View>
+                        <CustomCheckBox
+                            checked={multiple}
+                            style='pl-3'
+                            onChecked={() => {
+                                setMultiple(prev => !prev)
+                                transformedImageUrl && setTransformedImageUrl("");
                             }}
-                            color={multiple ? "#326AFD" : "white"}
+                            label={"Recolor Multiple"}
                         />
-                        <Text className='text-text ml-2'>Recolor multiple</Text>
-                    </TouchableOpacity>
+                    </View>
 
 
                     <View className='w-1/2 h-full flex-row justify-end gap-x-3 items-center'>
@@ -213,16 +190,11 @@ const GenerativeRecolor = () => {
                 </View>
 
                 {/* buttons */}
-                <View className='flex-row justify-between items-center mt-4'>
-                    <Link href={".."} asChild>
-                        <TouchableOpacity activeOpacity={0.5} className='border-2 border-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                            <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>Cancel</Text>
-                        </TouchableOpacity>
-                    </Link>
-                    <TouchableOpacity onPress={handleTransformation} activeOpacity={0.5} className='bg-buttonBackground h-[50px] rounded-md justify-center items-center max-w-40 w-[48%]'>
-                        <Text style={{ fontFamily: "Poppins-SemiBold" }} className='text-text text-sm'>{(transformedImageUrl && !loadingMessage) ? "Save" : "Recolor"}</Text>
-                    </TouchableOpacity>
-                </View>
+                <ActionButtons
+                    mainButtonAction={handleTransformation}
+                    mainButtonText={buttonText}
+                    loading={loadingMessage ? true : false}
+                />
 
             </ScrollView>
 

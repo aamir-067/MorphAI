@@ -101,6 +101,7 @@ const backgroundReplace = () => {
 
                 <EffectImagePreview
                     getPicture={getPicture}
+                    originalButtonText='Replace'
                     effectTitle={"Background Replace"}
                     image={img}
                     setButtonText={setButtonText}

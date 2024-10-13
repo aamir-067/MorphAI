@@ -88,6 +88,7 @@ const ImageUpscale = () => {
                     getPicture={getPicture}
                     effectTitle={"Image Upscale"}
                     image={img}
+                    originalButtonText='Upscale'
                     setButtonText={setButtonText}
                     loadingMessage={loadingMessage}
                     setLoadingMessage={setLoadingMessage}

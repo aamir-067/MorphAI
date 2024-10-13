@@ -12,6 +12,7 @@ interface Props {
     loadingMessage: string
     setLoadingMessage: React.Dispatch<React.SetStateAction<string>>
     setButtonText: React.Dispatch<React.SetStateAction<string>>
+    originalButtonText: string
     transformedImageUrl: string | undefined
     setTransformedImageUrl: React.Dispatch<React.SetStateAction<string | undefined>>
     image: ImagePickerAsset | undefined
@@ -23,21 +24,21 @@ const EffectImagePreview = ({
     setButtonText,
     setLoadingMessage,
     setTransformedImageUrl,
+    originalButtonText,
     image,
     transformedImageUrl
 }: Props) => {
-
 
     const onImageLoadError = () => {
         setLoadingMessage("");
         Alert.alert("Error", "something went wrong while loading images. try again later");
         setTransformedImageUrl(undefined);
-        setButtonText("Replace");
+        setButtonText(originalButtonText);
     }
 
     const onImageLoad = () => {
         setLoadingMessage("");
-        transformedImageUrl ? setButtonText("Save") : setButtonText("Replace");
+        transformedImageUrl ? setButtonText("Save") : setButtonText(originalButtonText);
     }
 
     const imageSource = transformedImageUrl

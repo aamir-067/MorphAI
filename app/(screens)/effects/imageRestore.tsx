@@ -93,6 +93,7 @@ const ImageRestore = () => {
 
                 <EffectImagePreview
                     getPicture={getPicture}
+                    originalButtonText='Restore'
                     effectTitle={"Image Restore"}
                     image={img}
                     setButtonText={setButtonText}

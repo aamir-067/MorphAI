@@ -96,6 +96,7 @@ const GenerativeReplace = () => {
             <ScrollView>
                 <EffectImagePreview
                     getPicture={getPicture}
+                    originalButtonText='Replace'
                     effectTitle={"Generative Replace"}
                     image={img}
                     setButtonText={setButtonText}
@@ -110,7 +111,7 @@ const GenerativeReplace = () => {
                 <View className='flex-row justify-between items-center'>
 
                     <PromptComponent
-                        onPromptChange={(e) => {
+                        onPromptChange={(e: string) => {
                             setFrom(e);
                             transformedImageUrl && setTransformedImageUrl("");
                         }}
@@ -119,7 +120,7 @@ const GenerativeReplace = () => {
                         style='w-[48%]'
                     />
                     <PromptComponent
-                        onPromptChange={(e) => {
+                        onPromptChange={(e: string) => {
                             setTo(e);
                             transformedImageUrl && setTransformedImageUrl("");
                         }}

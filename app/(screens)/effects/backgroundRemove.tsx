@@ -128,14 +128,11 @@
 //?     ==================  Temporary    =================
 
 import { Text, View, ScrollView } from 'react-native'
-import React, { useContext } from 'react'
+import React from 'react'
 import { Link } from 'expo-router'
 import BannerAdComponent from '@/ads/banner';
-import { BannerAdSize } from 'react-native-google-mobile-ads';
 import ComingSoon from '@/components/comingSoon';
-import { GlobalContext } from '@/context/contextProvider';
 const backgroundRemove = () => {
-    const { allowAds } = useContext(GlobalContext)
     return (
         <View className='bg-background h-full px-[10px]'>
             <ScrollView>
